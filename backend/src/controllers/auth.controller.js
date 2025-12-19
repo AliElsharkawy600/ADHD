@@ -5,18 +5,100 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const mailer = require("../config/mailer");
-
+const { sendVerificationEmail } = require("../config/mailer");
 // Register
+// exports.register = async (req, res) => {
+//   const { name, email, password } = req.body;
+
+//   const exists = await Parent.findOne({ email });
+//   if (exists) return res.status(400).json({ message: "Email already exists" });
+
+//   const hashed = await bcrypt.hash(password, 10);
+
+//   await Parent.create({ name, email, password: hashed });
+//   res.json({ message: "Account created successfully" });
+// };
+
+// STEP 1: Register Request
 exports.register = async (req, res) => {
-  const { name, email, password } = req.body;
+  try {
+    const { email, password, confirmPassword } = req.body;
 
-  const exists = await Parent.findOne({ email });
-  if (exists) return res.status(400).json({ message: "Email already exists" });
+    // 1️⃣ Validation
+    if (!email || !password || !confirmPassword) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
 
-  const hashed = await bcrypt.hash(password, 10);
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    }
 
-  await Parent.create({ name, email, password: hashed });
-  res.json({ message: "Account created successfully" });
+    const exists = await Parent.findOne({ email });
+    if (exists) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
+
+    // 2️⃣ Generate 6-digit code
+    const verificationCode = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+
+    // 3️⃣ Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // 4️⃣ Save temp user
+    await Parent.create({
+      email,
+      password: hashedPassword,
+      verificationCode,
+      verificationCodeExpires: Date.now() + 10 * 60 * 1000, // 10 min
+    });
+
+    // 5️⃣ Send email
+    // await sendVerificationEmail(email, verificationCode);
+    await mailer.sendMail({
+      to: email,
+      subject: "Verify Your Account",
+      html: `<h3>Your verification code is:</h3>
+             <h2>${verificationCode}</h2>
+             <p>Code expires in 10 minutes</p>`,
+    });
+
+    res.status(200).json({
+      message: "Verification code sent to email",
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// STEP 2: Verify Code
+exports.verifyEmail = async (req, res) => {
+  try {
+    const { email, code } = req.body;
+
+    const user = await Parent.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    if (
+      user.verificationCode !== code ||
+      user.verificationCodeExpires < Date.now()
+    ) {
+      return res.status(400).json({ message: "Invalid or expired code" });
+    }
+
+    // Activate account
+    user.isVerified = true;
+    user.verificationCode = undefined;
+    user.verificationCodeExpires = undefined;
+    await user.save();
+
+    res.json({ message: "Account verified successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
 };
 
 // Login
