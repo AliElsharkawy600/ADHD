@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Illustration } from './Illustration';
-import { Wave } from './Wave';
-import { OnboardingScreen } from './OnboardingScreen';
+import { OnboardingHero } from '../components/illustrations/OnboardingHero';
+import { Wave } from '../components/illustrations/Wave';
+import { OnboardingSlide } from '../pages/onboarding/OnboardingSlide';
 import { SlideData } from '../types';
 
 const SLIDES: SlideData[] = [
@@ -23,7 +23,7 @@ const SLIDES: SlideData[] = [
   }
 ];
 
-export const OnboardingFlow: React.FC<{ onFinish: () => void }> = ({ onFinish }) => {
+export const OnboardingNavigator: React.FC<{ onFinish: () => void }> = ({ onFinish }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const handleNext = () => {
@@ -54,14 +54,14 @@ export const OnboardingFlow: React.FC<{ onFinish: () => void }> = ({ onFinish })
       </div>
 
       <div className="relative flex-1 w-full">
-         <Illustration />
+         <OnboardingHero />
          <Wave />
       </div>
       
       <div className="relative h-[45%] bg-white"></div>
 
       {SLIDES.map((slide, index) => (
-        <OnboardingScreen 
+        <OnboardingSlide 
           key={slide.id}
           data={slide}
           isActive={index === currentSlide}

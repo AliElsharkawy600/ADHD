@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
-import { 
-    LoginScreen, 
-    SignupScreen, 
-    OTPScreen, 
-    ForgotPasswordScreen, 
-    ResetPasswordScreen, 
-    SuccessScreen 
-} from './AuthScreens';
-import { HomeScreen } from './HomeScreen';
+import { LoginScreen } from '../pages/auth/LoginScreen';
+import { SignupScreen } from '../pages/auth/SignupScreen';
+import { OTPScreen } from '../pages/auth/OTPScreen';
+import { ForgotPasswordScreen, ResetPasswordScreen } from '../pages/auth/PasswordScreens';
+import { SuccessScreen } from '../pages/common/SuccessScreen';
+import { HomeScreen } from '../pages/home/HomeScreen';
 
-export const AuthFlow: React.FC = () => {
+export const AuthNavigator: React.FC = () => {
   const [screen, setScreen] = useState('login');
 
   const navigate = (to: string) => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { SlideData } from '../types';
+import { SlideData } from '../../types';
 import { ArrowLeft } from 'lucide-react';
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
   onNext: () => void;
 }
 
-export const OnboardingScreen: React.FC<Props> = ({ 
+export const OnboardingSlide: React.FC<Props> = ({ 
   data, 
   isActive, 
   totalSlides, 
@@ -23,7 +23,6 @@ export const OnboardingScreen: React.FC<Props> = ({
     >
       <div className="w-full bg-white px-8 pb-safe pt-2 min-h-[40%] flex flex-col items-center text-center rounded-t-3xl z-20">
         
-        {/* Text Content */}
         <div className="mb-8 mt-2 space-y-3 max-w-xs">
           <h2 className="text-2xl font-bold text-gray-800 tracking-wide">
             {data.title}
@@ -33,10 +32,8 @@ export const OnboardingScreen: React.FC<Props> = ({
           </p>
         </div>
 
-        {/* Controls Container (Dots + Button) */}
         <div className="w-full flex flex-col items-center gap-8 mb-8">
             
-            {/* Custom Action Button */}
             {data.isLast ? (
                  <button 
                  onClick={onNext}
@@ -55,7 +52,6 @@ export const OnboardingScreen: React.FC<Props> = ({
               </button>
             )}
 
-            {/* Pagination Dots */}
             <div className="flex items-center gap-2">
             {Array.from({ length: totalSlides }).map((_, index) => (
                 <div
