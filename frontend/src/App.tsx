@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { OnboardingFlow } from './components/OnboardingFlow';
-import { AuthFlow } from './components/AuthFlow';
+import { OnboardingNavigator } from './navigation/OnboardingNavigator';
+import { AuthNavigator } from './navigation/AuthNavigator';
 
 export default function App() {
   const [showAuth, setShowAuth] = useState(false);
@@ -8,9 +8,9 @@ export default function App() {
   return (
     <div className="w-full h-screen overflow-hidden bg-white">
       {showAuth ? (
-        <AuthFlow />
+        <AuthNavigator />
       ) : (
-        <OnboardingFlow onFinish={() => setShowAuth(true)} />
+        <OnboardingNavigator onFinish={() => setShowAuth(true)} />
       )}
     </div>
   );

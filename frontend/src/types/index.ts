@@ -4,3 +4,7 @@ export interface SlideData {
   description: string;
   isLast?: boolean;
 }
+
+export interface ScreenProps {
+  onNavigate: (screen: string) => void;
+}
