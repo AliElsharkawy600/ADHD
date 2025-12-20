@@ -4,7 +4,7 @@ import { Logo } from '../../components/ui/Logo';
 import { Input } from '../../components/ui/Input';
 import { Button, SocialButton } from '../../components/ui/Button';
 import { ScreenProps } from '../../types';
-import { api } from '../../services/api';
+import { login as loginApi } from '../../services/authApi';
 import { useAuth } from '../../context/AuthContext';
 
 export const LoginScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
@@ -19,12 +19,12 @@ export const LoginScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
       setError('الرجاء ملء جميع الحقول');
       return;
     }
-    
+
     setLoading(true);
     setError('');
 
     try {
-      const data = await api.login({ email, password });
+      const data = await loginApi({ email, password });
       // Save token in context
       login(data.token);
       // AuthProvider will automatically switch to Home, 
@@ -37,24 +37,24 @@ export const LoginScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
   };
 
   const handleGoogleLogin = async () => {
-     // Placeholder for Google Login implementation
-     // 1. Get idToken from Capacitor Plugin
-     // 2. Call api.googleLogin(idToken)
-     // 3. login(data.token)
-     alert("Google Login needs Native Plugin setup");
+    // Placeholder for Google Login implementation
+    // 1. Get idToken from Capacitor Plugin
+    // 2. Call api.googleLogin(idToken)
+    // 3. login(data.token)
+    alert("Google Login needs Native Plugin setup");
   };
 
   return (
     <div className="flex flex-col h-full px-6 pt-10 pb-safe">
       <Logo className="mb-8" />
-      
+
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-[#5CAAF8] mb-1">تسجيل الدخول</h2>
         <p className="text-gray-500">أهلاً بك مجدداً</p>
       </div>
 
       <div className="flex-1">
-        <Input 
+        <Input
           label="البريد الإلكتروني أو رقم الهاتف *"
           placeholder="أدخل البريد الإلكتروني أو رقم الهاتف"
           value={email}
@@ -62,9 +62,9 @@ export const LoginScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
           icon={<Mail size={20} />}
           error={error ? ' ' : undefined}
         />
-        
+
         <div className="relative">
-            <Input 
+          <Input
             label="كلمة المرور *"
             placeholder="أدخل كلمة المرور"
             type="password"
@@ -72,13 +72,13 @@ export const LoginScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             error={error ? ' ' : undefined}
-            />
+          />
         </div>
-        
+
         {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
 
         <div className="flex justify-end mb-6">
-          <button 
+          <button
             onClick={() => onNavigate('forgot-password')}
             className="text-[#5CAAF8] text-sm font-medium hover:underline"
           >
@@ -91,10 +91,10 @@ export const LoginScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
         </Button>
 
         <div className="relative flex items-center justify-center mb-6">
-           <div className="absolute inset-0 flex items-center">
-             <div className="w-full border-t border-gray-200"></div>
-           </div>
-           <span className="relative bg-white px-4 text-gray-500 text-sm">أو</span>
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-200"></div>
+          </div>
+          <span className="relative bg-white px-4 text-gray-500 text-sm">أو</span>
         </div>
 
         <div className="space-y-3 mb-8">
@@ -103,7 +103,7 @@ export const LoginScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
 
         <div className="text-center">
           <span className="text-gray-500 text-sm ml-1">ليس لديك حساب؟</span>
-          <button 
+          <button
             onClick={() => onNavigate('signup')}
             className="text-[#5CAAF8] font-bold text-sm hover:underline"
           >
