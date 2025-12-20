@@ -6,35 +6,46 @@ import { ForgotPasswordScreen, ResetPasswordScreen } from '../pages/auth/Passwor
 import { SuccessScreen } from '../pages/common/SuccessScreen';
 import { HomeScreen } from '../pages/home/HomeScreen';
 
-export const AuthNavigator: React.FC = () => {
-  const [screen, setScreen] = useState('login');
+interface ScreenState {
+  name: string;
+  params?: any;
+}
 
-  const navigate = (to: string) => {
-      setScreen(to);
+export const AuthNavigator: React.FC = () => {
+  const [screen, setScreen] = useState<ScreenState>({ name: 'login' });
+
+  const navigate = (to: string, params?: any) => {
+      setScreen({ name: to, params });
   };
 
   const renderScreen = () => {
-      switch(screen) {
-          case 'login': return <LoginScreen onNavigate={navigate} />;
-          case 'signup': return <SignupScreen onNavigate={navigate} />;
-          case 'otp': return <OTPScreen onNavigate={navigate} />;
-          case 'forgot-password': return <ForgotPasswordScreen onNavigate={navigate} />;
-          case 'reset-password': return <ResetPasswordScreen onNavigate={navigate} />;
+      switch(screen.name) {
+          case 'login': 
+            return <LoginScreen onNavigate={navigate} params={screen.params} />;
+          case 'signup': 
+            return <SignupScreen onNavigate={navigate} params={screen.params} />;
+          case 'otp': 
+            return <OTPScreen onNavigate={navigate} params={screen.params} />;
+          case 'forgot-password': 
+            return <ForgotPasswordScreen onNavigate={navigate} params={screen.params} />;
+          case 'reset-password': 
+            return <ResetPasswordScreen onNavigate={navigate} params={screen.params} />;
           case 'success-signup': 
              return <SuccessScreen 
                         onNavigate={navigate} 
-                        title="مرحباً Ola !" 
-                        subtitle="تم إنشاء حسابك بنجاح" 
+                        title="مرحباً!" 
+                        subtitle="تم إنشاء حسابك وتفعيله بنجاح" 
                     />;
           case 'success-reset': 
              return <SuccessScreen 
                         onNavigate={navigate} 
-                        title="تهانينا !" 
+                        title="تهانينا!" 
                         subtitle="تم تغيير كلمة المرور بنجاح" 
                     />;
           case 'home':
              return <HomeScreen />;
-          default: return <LoginScreen onNavigate={navigate} />;
+          default: 
+            return <LoginScreen onNavigate={navigate} />;
       }
   };
 

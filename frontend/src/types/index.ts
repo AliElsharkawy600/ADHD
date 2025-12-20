@@ -6,5 +6,6 @@ export interface SlideData {
 }
 
 export interface ScreenProps {
-  onNavigate: (screen: string) => void;
+  onNavigate: (screen: string, params?: any) => void;
+  params?: any;
 }

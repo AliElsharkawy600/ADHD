@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { Mail, ArrowLeft } from 'lucide-react';
+import { Mail, ArrowLeft, Loader2 } from 'lucide-react';
 import { Logo } from '../../components/ui/Logo';
 import { Input } from '../../components/ui/Input';
 import { Button, SocialButton } from '../../components/ui/Button';
 import { ScreenProps } from '../../types';
+import { api } from '../../services/api';
 
 export const SignupScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
   const [formData, setFormData] = useState({ email: '', password: '', confirmPassword: '' });
   const [errors, setErrors] = useState<any>({});
+  const [loading, setLoading] = useState(false);
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     const newErrors: any = {};
     if (!formData.email) newErrors.email = 'مطلوب';
     if (formData.password.length < 6) newErrors.password = 'يجب أن تكون من أكثر من 6 أحرف';
@@ -17,8 +19,20 @@ export const SignupScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
 
     if (Object.keys(newErrors).length > 0) {
         setErrors(newErrors);
-    } else {
-        onNavigate('otp');
+        return;
+    }
+
+    setLoading(true);
+    setErrors({});
+
+    try {
+      await api.register(formData);
+      // On success, navigate to OTP and pass the email
+      onNavigate('otp', { email: formData.email });
+    } catch (err: any) {
+      setErrors({ email: err.message || 'حدث خطأ أثناء التسجيل' });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,7 +58,7 @@ export const SignupScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
           value={formData.email}
           onChange={(e) => setFormData({...formData, email: e.target.value})}
           icon={<Mail size={20} />}
-          error={errors.email ? 'البريد الإلكتروني غير صحيح!' : undefined}
+          error={errors.email}
         />
         
         <Input 
@@ -56,7 +70,7 @@ export const SignupScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
           onChange={(e) => setFormData({...formData, password: e.target.value})}
           error={errors.password}
         />
-        {errors.password && <p className="text-xs text-red-400 -mt-2 mb-2 mr-1">يجب أن تكون من أكثر من 6 أحرف</p>}
+        {errors.password && <p className="text-xs text-red-400 -mt-2 mb-2 mr-1">{errors.password}</p>}
 
         <Input 
           label="تأكيد كلمة المرور *"
@@ -68,8 +82,8 @@ export const SignupScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
           error={errors.confirmPassword}
         />
 
-        <Button onClick={handleSignup} className="mt-2 mb-6">
-          إنشاء حساب جديد
+        <Button onClick={handleSignup} className="mt-2 mb-6" disabled={loading}>
+          {loading ? 'جاري الإنشاء...' : 'إنشاء حساب جديد'}
         </Button>
 
         <div className="relative flex items-center justify-center mb-6">
