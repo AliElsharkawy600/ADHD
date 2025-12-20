@@ -4,7 +4,7 @@ import { Logo } from '../../components/ui/Logo';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import { ScreenProps } from '../../types';
-import { api } from '../../services/api';
+import { forgotPassword as forgotPasswordApi, resetPassword as resetPasswordApi } from '../../services/authApi';
 
 // Forgot Password Screen
 export const ForgotPasswordScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
@@ -13,40 +13,40 @@ export const ForgotPasswordScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
   const [error, setError] = useState('');
 
   const handleSubmit = async () => {
-    if(!email) {
-        setError("الرجاء إدخال البريد الإلكتروني");
-        return;
+    if (!email) {
+      setError("الرجاء إدخال البريد الإلكتروني");
+      return;
     }
     setLoading(true);
     setError('');
     try {
-        await api.forgotPassword({ email });
-        // Navigate to Reset Password and pass email
-        onNavigate('reset-password', { email });
+      await forgotPasswordApi({ email });
+      // Navigate to Reset Password and pass email
+      onNavigate('reset-password', { email });
     } catch (err: any) {
-        setError(err.message || "حدث خطأ");
+      setError(err.message || "حدث خطأ");
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
   return (
     <div className="flex flex-col h-full px-6 pt-10 pb-safe">
-       <div className="w-full flex justify-end mb-4">
-         <button onClick={() => onNavigate('login')} className="p-2 text-gray-600">
-           <ArrowLeft size={24} />
-         </button>
-       </div>
-       
-       <Logo className="mb-8" />
+      <div className="w-full flex justify-end mb-4">
+        <button onClick={() => onNavigate('login')} className="p-2 text-gray-600">
+          <ArrowLeft size={24} />
+        </button>
+      </div>
 
-       <div className="text-center mb-8">
+      <Logo className="mb-8" />
+
+      <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-[#5CAAF8] mb-1">إعادة كلمة المرور!</h2>
         <p className="text-gray-500 text-sm">لا تقلق، سنرسل لك رمز التحقق لإعادة تعيين كلمة المرور</p>
       </div>
 
       <div className="flex-1">
-        <Input 
+        <Input
           label="البريد الإلكتروني *"
           placeholder="أدخل البريد الإلكتروني"
           icon={<Mail size={20} />}
@@ -56,7 +56,7 @@ export const ForgotPasswordScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
         />
 
         <Button onClick={handleSubmit} className="mt-4" disabled={loading}>
-            {loading ? 'جاري الإرسال...' : 'إرسال رمز التحقق'}
+          {loading ? 'جاري الإرسال...' : 'إرسال رمز التحقق'}
         </Button>
       </div>
     </div>
@@ -73,39 +73,39 @@ export const ResetPasswordScreen: React.FC<ScreenProps> = ({ onNavigate, params 
   const [error, setError] = useState('');
 
   const handleReset = async () => {
-     if (!code || !newPassword || !confirmPassword) {
-         setError("جميع الحقول مطلوبة");
-         return;
-     }
-     if (newPassword !== confirmPassword) {
-         setError("كلمات المرور غير متطابقة");
-         return;
-     }
+    if (!code || !newPassword || !confirmPassword) {
+      setError("جميع الحقول مطلوبة");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setError("كلمات المرور غير متطابقة");
+      return;
+    }
 
-     setLoading(true);
-     setError('');
+    setLoading(true);
+    setError('');
 
-     try {
-         await api.resetPassword({ email, code, newPassword });
-         onNavigate('success-reset');
-     } catch (err: any) {
-         setError(err.message || "رمز التحقق غير صحيح أو انتهت صلاحيته");
-     } finally {
-         setLoading(false);
-     }
+    try {
+      await resetPasswordApi({ email, code, newPassword });
+      onNavigate('success-reset');
+    } catch (err: any) {
+      setError(err.message || "رمز التحقق غير صحيح أو انتهت صلاحيته");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="flex flex-col h-full px-6 pt-10 pb-safe overflow-y-auto no-scrollbar">
-       <div className="w-full flex justify-end mb-4">
-         <button onClick={() => onNavigate('login')} className="p-2 text-gray-600">
-           <ArrowLeft size={24} />
-         </button>
-       </div>
-       
-       <Logo className="mb-8" />
+      <div className="w-full flex justify-end mb-4">
+        <button onClick={() => onNavigate('login')} className="p-2 text-gray-600">
+          <ArrowLeft size={24} />
+        </button>
+      </div>
 
-       <div className="text-center mb-8">
+      <Logo className="mb-8" />
+
+      <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-[#5CAAF8] mb-1">تعيين كلمة المرور</h2>
         <p className="text-gray-500 text-sm">أدخل الرمز الذي وصلك عبر البريد وكلمة المرور الجديدة</p>
         <p className="text-xs text-[#5CAAF8] mt-1">{email}</p>
@@ -113,7 +113,7 @@ export const ResetPasswordScreen: React.FC<ScreenProps> = ({ onNavigate, params 
 
       <div className="flex-1">
         {/* NEW INPUT FOR CODE */}
-        <Input 
+        <Input
           label="رمز التحقق *"
           placeholder="أدخل الكود (6 أرقام)"
           icon={<KeyRound size={20} />}
@@ -121,15 +121,15 @@ export const ResetPasswordScreen: React.FC<ScreenProps> = ({ onNavigate, params 
           onChange={(e) => setCode(e.target.value)}
         />
 
-        <Input 
+        <Input
           label="كلمة المرور الجديدة *"
           placeholder="أدخل كلمة مرور جديدة"
           isPassword
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
         />
-        
-        <Input 
+
+        <Input
           label="تأكيد كلمة المرور *"
           placeholder="تأكيد كلمة المرور"
           isPassword
@@ -139,7 +139,7 @@ export const ResetPasswordScreen: React.FC<ScreenProps> = ({ onNavigate, params 
         />
 
         <Button onClick={handleReset} className="mt-4" disabled={loading}>
-            {loading ? 'جاري التعيين...' : 'تعيين كلمة المرور'}
+          {loading ? 'جاري التعيين...' : 'تعيين كلمة المرور'}
         </Button>
       </div>
     </div>
