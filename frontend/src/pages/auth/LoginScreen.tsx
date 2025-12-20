@@ -4,22 +4,44 @@ import { Logo } from '../../components/ui/Logo';
 import { Input } from '../../components/ui/Input';
 import { Button, SocialButton } from '../../components/ui/Button';
 import { ScreenProps } from '../../types';
+import { api } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 
 export const LoginScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
       setError('الرجاء ملء جميع الحقول');
       return;
     }
-    if (email.includes('error')) {
-        setError('البيانات غير صحيحة');
-        return;
+    
+    setLoading(true);
+    setError('');
+
+    try {
+      const data = await api.login({ email, password });
+      // Save token in context
+      login(data.token);
+      // AuthProvider will automatically switch to Home, 
+      // but we can ensure navigation or just let the state update trigger re-render
+    } catch (err: any) {
+      setError(err.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة');
+    } finally {
+      setLoading(false);
     }
-    onNavigate('home');
+  };
+
+  const handleGoogleLogin = async () => {
+     // Placeholder for Google Login implementation
+     // 1. Get idToken from Capacitor Plugin
+     // 2. Call api.googleLogin(idToken)
+     // 3. login(data.token)
+     alert("Google Login needs Native Plugin setup");
   };
 
   return (
@@ -38,7 +60,7 @@ export const LoginScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           icon={<Mail size={20} />}
-          error={email.includes('error') ? 'البريد الإلكتروني غير صحيح!' : undefined}
+          error={error ? ' ' : undefined}
         />
         
         <div className="relative">
@@ -49,9 +71,11 @@ export const LoginScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
             isPassword
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            error={error && !password ? ' ' : undefined}
+            error={error ? ' ' : undefined}
             />
         </div>
+        
+        {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
 
         <div className="flex justify-end mb-6">
           <button 
@@ -62,8 +86,8 @@ export const LoginScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
           </button>
         </div>
 
-        <Button onClick={handleLogin} className="mb-6">
-          تسجيل الدخول
+        <Button onClick={handleLogin} className="mb-6" disabled={loading}>
+          {loading ? 'جاري الدخول...' : 'تسجيل الدخول'}
         </Button>
 
         <div className="relative flex items-center justify-center mb-6">
@@ -74,7 +98,7 @@ export const LoginScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
         </div>
 
         <div className="space-y-3 mb-8">
-          <SocialButton provider="google" />
+          <SocialButton provider="google" onClick={handleGoogleLogin} />
         </div>
 
         <div className="text-center">

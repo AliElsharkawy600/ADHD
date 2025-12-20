@@ -2,9 +2,15 @@ import React, { useState } from 'react';
 import { Smartphone, ArrowLeft } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { ScreenProps } from '../../types';
+import { api } from '../../services/api';
 
-export const OTPScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
+export const OTPScreen: React.FC<ScreenProps> = ({ onNavigate, params }) => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  
+  // Get email from previous screen
+  const email = params?.email || '';
 
   const handleChange = (element: HTMLInputElement, index: number) => {
     if (isNaN(Number(element.value))) return false;
@@ -16,6 +22,26 @@ export const OTPScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
     // Focus next input
     if (element.value && element.nextSibling) {
       (element.nextSibling as HTMLInputElement).focus();
+    }
+  };
+
+  const handleVerify = async () => {
+    const code = otp.join('');
+    if (code.length !== 6) {
+        setError('الرجاء إدخال الرمز كاملاً');
+        return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+        await api.verifyEmail({ email, code });
+        onNavigate('success-signup');
+    } catch (err: any) {
+        setError(err.message || 'رمز التحقق غير صحيح');
+    } finally {
+        setLoading(false);
     }
   };
 
@@ -34,9 +60,9 @@ export const OTPScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
 
         <h2 className="text-xl font-bold text-gray-800 mb-2">تحقق من البريد الإلكتروني</h2>
         <p className="text-gray-500 text-sm mb-1">أدخل الرمز المرسل إلى</p>
-        <p className="text-[#5CAAF8] dir-ltr mb-10">ola@gmail.com</p>
+        <p className="text-[#5CAAF8] dir-ltr mb-6">{email}</p>
 
-        <div className="flex gap-2 mb-8 dir-ltr" style={{ direction: 'ltr' }}>
+        <div className="flex gap-2 mb-4 dir-ltr" style={{ direction: 'ltr' }}>
             {otp.map((data, index) => (
                 <input
                     key={index}
@@ -49,13 +75,15 @@ export const OTPScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
                 />
             ))}
         </div>
+        
+        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
         <div className="text-sm text-gray-500 mb-8">
             إعادة إرسال خلال <span className="text-[#5CAAF8] font-bold">00:48</span>
         </div>
 
-        <Button onClick={() => onNavigate('success-signup')}>
-            تحقق
+        <Button onClick={handleVerify} disabled={loading}>
+            {loading ? 'جاري التحقق...' : 'تحقق'}
         </Button>
       </div>
     </div>
