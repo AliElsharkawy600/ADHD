@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Mail } from "lucide-react";
+import { Mail, ArrowLeft } from "lucide-react";
 import { useGoogleLogin } from "@react-oauth/google";
 import { Logo } from "../../components/ui/Logo";
 import { Input } from "../../components/ui/Input";
@@ -60,7 +60,13 @@ export const LoginScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
   });
 
   return (
-    <div className="flex flex-col h-full px-6 pt-10 pb-safe">
+    <div className="flex flex-col h-full px-6 pt-6 pb-safe overflow-y-auto no-scrollbar">
+      {/* Back Button added */}
+      <div className="w-full flex justify-end mb-4">
+         <button onClick={() => onNavigate('welcome')} className="p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors">
+           <ArrowLeft size={24} />
+         </button>
+       </div>
       <Logo className="mb-8" />
 
       <div className="text-center mb-8">
@@ -70,8 +76,8 @@ export const LoginScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
 
       <div className="flex-1">
         <Input
-          label="البريد الإلكتروني أو رقم الهاتف *"
-          placeholder="أدخل البريد الإلكتروني أو رقم الهاتف"
+          label="البريد الإلكتروني *"
+          placeholder="أدخل البريد الإلكتروني"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           icon={<Mail size={20} />}

@@ -71,7 +71,7 @@ export const SignupScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
     <div className="flex flex-col h-full px-6 pt-6 pb-safe overflow-y-auto no-scrollbar">
       <div className="w-full flex justify-end mb-4">
         <button
-          onClick={() => onNavigate("login")}
+          onClick={() => onNavigate("welcome")}
           className="p-2 text-gray-600"
         >
           <ArrowLeft size={24} />

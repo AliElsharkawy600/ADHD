@@ -2,9 +2,9 @@ import React from 'react';
 
 export const Wave: React.FC = () => {
   return (
-    <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0]">
+    <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-0">
         <svg 
-            className="relative block w-[calc(140%+1.3px)] h-[100px] md:h-[150px]" 
+            className="relative block w-[calc(140%+1.3px)] h-25 md:h-37.5" 
             style={{ transform: 'rotate(180deg)' }}
             viewBox="0 0 1200 120" 
             preserveAspectRatio="none"
