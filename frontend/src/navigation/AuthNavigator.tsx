@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { WelcomeScreen } from '../pages/auth/WelcomeScreen';
 import { LoginScreen } from '../pages/auth/LoginScreen';
 import { SignupScreen } from '../pages/auth/SignupScreen';
 import { OTPScreen } from '../pages/auth/OTPScreen';
@@ -12,7 +13,8 @@ interface ScreenState {
 }
 
 export const AuthNavigator: React.FC = () => {
-  const [screen, setScreen] = useState<ScreenState>({ name: 'login' });
+  // Changed initial state from 'login' to 'welcome'
+  const [screen, setScreen] = useState<ScreenState>({ name: 'welcome' });
 
   const navigate = (to: string, params?: any) => {
       setScreen({ name: to, params });
@@ -20,6 +22,8 @@ export const AuthNavigator: React.FC = () => {
 
   const renderScreen = () => {
       switch(screen.name) {
+          case 'welcome':
+            return <WelcomeScreen onNavigate={navigate} params={screen.params} />;
           case 'login': 
             return <LoginScreen onNavigate={navigate} params={screen.params} />;
           case 'signup': 
@@ -45,7 +49,7 @@ export const AuthNavigator: React.FC = () => {
           case 'home':
              return <HomeScreen />;
           default: 
-            return <LoginScreen onNavigate={navigate} />;
+            return <WelcomeScreen onNavigate={navigate} />;
       }
   };
 

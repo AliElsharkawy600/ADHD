@@ -1,5 +1,3 @@
-const { OAuth2Client } = require("google-auth-library");
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const Parent = require("../models/Parent");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -168,16 +166,23 @@ exports.resetPassword = async (req, res) => {
 
 // google login
 exports.googleLogin = async (req, res) => {
-  const { idToken } = req.body;
+  const { accessToken } = req.body;
 
   try {
-    const ticket = await googleClient.verifyIdToken({
-      idToken,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
+    // Fetch user info from Google using access token
+    const response = await fetch(
+      "https://www.googleapis.com/oauth2/v2/userinfo",
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
 
-    const payload = ticket.getPayload();
-    const { email, name } = payload;
+    if (!response.ok) {
+      return res.status(401).json({ message: "Invalid Google token" });
+    }
+
+    const payload = await response.json();
+    const { email, name, picture } = payload;
 
     let parent = await Parent.findOne({ email });
 
@@ -186,6 +191,7 @@ exports.googleLogin = async (req, res) => {
         name,
         email,
         provider: "google",
+        isVerified: true, // Google accounts are pre-verified
       });
     }
 

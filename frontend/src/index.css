@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@theme {
+  --font-baloo: "Baloo Bhaijaan 2", cursive;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-baloo);
+    @apply select-none bg-white;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: none;
+  }
+}
+
+/* Safe area spacing for notched phones */
+.pt-safe { padding-top: env(safe-area-inset-top); }
+.pb-safe { padding-bottom: env(safe-area-inset-bottom); }
