@@ -6,7 +6,13 @@ const Child = require("../models/Child.js");
 exports.createChild = async (req, res) => {
     try {
         const parentId = req.user.id;
-        console.log(parentId);
+
+        // التحقق مما إذا كان لدى الأب طفل بالفعل
+        const existingChild = await Child.findOne({ parent: parentId });
+        if (existingChild) {
+            return res.status(400).json({ message: "مسموح بإضافة طفل واحد فقط" });
+        }
+
         const { name, age, avatar } = req.body;
 
         if (!name || !age) {
@@ -14,7 +20,7 @@ exports.createChild = async (req, res) => {
         }
 
         const child = await Child.create({
-            parent: req.user.id,
+            parent: parentId,
             name,
             age,
             avatar
