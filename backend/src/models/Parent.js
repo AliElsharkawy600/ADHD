@@ -25,8 +25,12 @@ const mongoose = require("mongoose");
 const parentSchema = new mongoose.Schema(
   {
     name: String,
-    email: { type: String, unique: true },
+    email: { type: String, unique: true, required: true },
     password: String,
+
+    children: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Child" }
+    ],
 
     isVerified: { type: Boolean, default: false },
     verificationCode: String,
