@@ -11,10 +11,10 @@ const {
 const childRouter = express.Router();
 
 // إنشاء طفل
-childRouter.post("/create", authMiddleware, createChild);
+childRouter.post("/", authMiddleware, createChild);
 
-// كل أطفال الأب
-childRouter.get("/all", authMiddleware, getMyChildren);
+// جلب أطفال الأب
+childRouter.get("/", authMiddleware, getMyChildren);
 
 // طفل واحد
 childRouter.get("/:childId", authMiddleware, getChildById);
