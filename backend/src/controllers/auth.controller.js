@@ -21,20 +21,22 @@ const { sendVerificationEmail } = require("../config/mailer");
 // STEP 1: Register Request
 exports.register = async (req, res) => {
   try {
-    const { email, password, confirmPassword } = req.body;
+    const { email, phoneNumber, password, confirmPassword } = req.body;
 
     // 1️⃣ Validation
-    if (!email || !password || !confirmPassword) {
-      return res.status(400).json({ message: "All fields are required" });
+    if (!email || !phoneNumber || !password || !confirmPassword) {
+      return res.status(400).json({ message: "كل الحقول مطلوبة" });
     }
 
     if (password !== confirmPassword) {
-      return res.status(400).json({ message: "Passwords do not match" });
+      return res.status(400).json({ message: "كلمات المرور غير متطابقة" });
     }
 
     const exists = await Parent.findOne({ email });
     if (exists) {
-      return res.status(400).json({ message: "Email already exists" });
+      return res
+        .status(400)
+        .json({ message: "البريد الإلكتروني موجود بالفعل" });
     }
 
     // 2️⃣ Generate 6-digit code
@@ -49,6 +51,7 @@ exports.register = async (req, res) => {
     await Parent.create({
       email,
       password: hashedPassword,
+      phoneNumber,
       verificationCode,
       verificationCodeExpires: Date.now() + 10 * 60 * 1000, // 10 min
     });
@@ -64,10 +67,10 @@ exports.register = async (req, res) => {
     });
 
     res.status(200).json({
-      message: "Verification code sent to email",
+      message: "تم إرسال رمز التحقق إلى البريد الإلكتروني",
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "خطأ في السيرفر" });
   }
 };
 
@@ -78,14 +81,16 @@ exports.verifyEmail = async (req, res) => {
 
     const user = await Parent.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(400).json({ message: "المستخدم غير موجود" });
     }
 
     if (
       user.verificationCode !== code ||
       user.verificationCodeExpires < Date.now()
     ) {
-      return res.status(400).json({ message: "Invalid or expired code" });
+      return res
+        .status(400)
+        .json({ message: "رمز غير صالح أو منتهي الصلاحية" });
     }
 
     // Activate account
@@ -94,9 +99,9 @@ exports.verifyEmail = async (req, res) => {
     user.verificationCodeExpires = undefined;
     await user.save();
 
-    res.json({ message: "Account verified successfully" });
+    res.json({ message: "تم التحقق من الحساب بنجاح" });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "خطأ في السيرفر" });
   }
 };
 
@@ -105,10 +110,10 @@ exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   const parent = await Parent.findOne({ email });
-  if (!parent) return res.status(400).json({ message: "Invalid credentials" });
+  if (!parent) return res.status(400).json({ message: "بيانات غير صحيحة" });
 
   const match = await bcrypt.compare(password, parent.password);
-  if (!match) return res.status(400).json({ message: "Invalid credentials" });
+  if (!match) return res.status(400).json({ message: "بيانات غير صحيحة" });
 
   const token = jwt.sign(
     { id: parent._id, email: parent.email },
@@ -172,7 +177,10 @@ exports.forgotPassword = async (req, res) => {
   const { email } = req.body;
 
   const parent = await Parent.findOne({ email });
-  if (!parent) return res.json({ message: "If email exists, code sent" });
+  if (!parent)
+    return res.json({
+      message: "في حال وجود بريد إلكتروني، سيتم إرسال الرمز.",
+    });
 
   const code = Math.floor(100000 + Math.random() * 900000).toString();
   const hashedCode = crypto.createHash("sha256").update(code).digest("hex");
@@ -184,10 +192,10 @@ exports.forgotPassword = async (req, res) => {
   await mailer.sendMail({
     to: email,
     subject: "Reset Password Code",
-    html: `<h3>Your verification code</h3><h2>${code}</h2><p>Expires in 15 minutes</p>`,
+    html: `<h3>Your Reset Password code</h3><h2>${code}</h2><p>Expires in 15 minutes</p>`,
   });
 
-  res.json({ message: "Verification code sent to email" });
+  res.json({ message: "تم إرسال رمز التحقق إلى البريد الإلكتروني" });
 };
 
 // Reset Password
@@ -202,15 +210,14 @@ exports.resetPassword = async (req, res) => {
     resetCodeExpires: { $gt: Date.now() },
   });
 
-  if (!parent)
-    return res.status(400).json({ message: "Invalid or expired code" });
+  if (!parent) return res.status(400).json({ message: "بيانات غير صحيحة" });
 
   parent.password = await bcrypt.hash(newPassword, 10);
   parent.resetCode = undefined;
   parent.resetCodeExpires = undefined;
   await parent.save();
 
-  res.json({ message: "Password reset successfully" });
+  res.json({ message: "تم إعادة تعيين كلمة المرور بنجاح" });
 };
 
 // google login
@@ -278,7 +285,7 @@ exports.googleLogin = async (req, res) => {
     );
 
     if (!response.ok) {
-      return res.status(401).json({ message: "Invalid Google token" });
+      return res.status(401).json({ message: "رمز جوجل غير صالح" });
     }
 
     const { email, name, picture } = await response.json();
@@ -312,20 +319,32 @@ exports.googleLogin = async (req, res) => {
     });
   } catch (err) {
     console.error("Google login error:", err);
-    res.status(401).json({ message: "Invalid Google token" });
+    res.status(401).json({ message: "رمز جوجل غير صالح" });
   }
 };
 
 // create child for parent
 exports.addChild = async (req, res) => {
-  const { name, age } = req.body;
+  const { name, birthDate, gender, country, city } = req.body;
   const parentId = req.user.id; // جاي من JWT middleware
+
+  if (!name || !birthDate || !gender || !country || !city) {
+    return res.status(400).json({ message: "كل الحقول مطلوبة" });
+  }
+
+  const childExists = await Child.findOne({ name, parent: parentId });
+  if (childExists) {
+    return res.status(400).json({ message: "طفل موجود بالفعل" });
+  }
 
   try {
     // 1️⃣ Create child WITH parent
     const child = await Child.create({
       name,
-      age,
+      birthDate,
+      gender,
+      country,
+      city,
       parent: parentId,
     });
 
@@ -335,11 +354,11 @@ exports.addChild = async (req, res) => {
     });
 
     res.status(201).json({
-      message: "Child created successfully",
+      message: "تم إنشاء الطفل بنجاح",
       childId: child._id,
     });
   } catch (err) {
     console.error(err);
-    res.status(400).json({ message: "Failed to create child" });
+    res.status(400).json({ message: "فشل في إنشاء الطفل" });
   }
 };
