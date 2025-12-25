@@ -3,14 +3,17 @@ import { Smartphone, ArrowLeft } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { ScreenProps } from '../../types';
 import { verifyEmail } from '../../services/authApi';
+import { useAuth } from '../../context/AuthContext';
 
 export const OTPScreen: React.FC<ScreenProps> = ({ onNavigate, params }) => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { login } = useAuth();
 
   // Get email from previous screen
   const email = params?.email || '';
+  const password = params?.password || '';
 
   const handleChange = (element: HTMLInputElement, index: number) => {
     if (isNaN(Number(element.value))) return false;
@@ -36,8 +39,16 @@ export const OTPScreen: React.FC<ScreenProps> = ({ onNavigate, params }) => {
     setError('');
 
     try {
-      await verifyEmail({ email, code });
-      onNavigate('success-signup');
+      const response = await verifyEmail({ email, code , password });
+      
+      // Check if user has child profile (Backend logic)
+      if (response.user.hasChildren) {
+        // onNavigate('success-signup');
+        login(response.token);
+      } else {
+        // Redirect to child setup with the token
+        onNavigate('child-setup', { token: response.token });
+      }
     } catch (err: any) {
       setError(err.message || 'رمز التحقق غير صحيح');
     } finally {

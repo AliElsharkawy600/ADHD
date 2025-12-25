@@ -40,7 +40,7 @@ export const SignupScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
     try {
       await registerApi(formData);
       // On success, navigate to OTP and pass the email
-      onNavigate("otp", { email: formData.email });
+      onNavigate("otp", { email: formData.email , password :formData.password});
     } catch (err: any) {
       setErrors({ email: err.message || "حدث خطأ أثناء التسجيل" });
     } finally {
@@ -54,7 +54,11 @@ export const SignupScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
       setErrors({});
       try {
         const data = await googleLoginApi(codeResponse.access_token);
-        login(data.token);
+        if (data.user.hasChildren) {
+          login(data.token);
+        } else {
+          onNavigate('child-setup', { token: data.token });
+        }
       } catch (err: any) {
         setErrors({ email: err.message || "فشل التسجيل باستخدام Google" });
       } finally {

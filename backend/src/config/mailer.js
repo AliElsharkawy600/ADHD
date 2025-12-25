@@ -6,6 +6,9 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  // tls:{
+  //   rejectUnauthorized: false
+  // }
 });
 
 exports.sendVerificationEmail = async (email, code) => {
@@ -13,9 +16,9 @@ exports.sendVerificationEmail = async (email, code) => {
     from: `"Nama App" <${process.env.EMAIL_USER}>`,
     to: email,
     subject: "Verify Your Account",
-    html: `<h3>Your verification code is:</h3>
+    html: `<h3>كود التحقق الخاص بك هو:</h3>
            <h2>${code}</h2>
-           <p>Code expires in 10 minutes</p>`,
+           <p>سينتهي هذا الكود بعد 10 دقيقة</p>`,
   });
 };
 
