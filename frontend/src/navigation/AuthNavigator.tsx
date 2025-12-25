@@ -4,6 +4,7 @@ import { LoginScreen } from '../pages/auth/LoginScreen';
 import { SignupScreen } from '../pages/auth/SignupScreen';
 import { OTPScreen } from '../pages/auth/OTPScreen';
 import { ForgotPasswordScreen, ResetPasswordScreen } from '../pages/auth/PasswordScreens';
+import { ChildSetupScreen } from '../pages/auth/ChildSetupScreen';
 import { SuccessScreen } from '../pages/common/SuccessScreen';
 import { HomeScreen } from '../pages/home/HomeScreen';
 
@@ -30,6 +31,8 @@ export const AuthNavigator: React.FC = () => {
             return <SignupScreen onNavigate={navigate} params={screen.params} />;
           case 'otp': 
             return <OTPScreen onNavigate={navigate} params={screen.params} />;
+          case 'child-setup':
+            return <ChildSetupScreen onNavigate={navigate} params={screen.params} />;
           case 'forgot-password': 
             return <ForgotPasswordScreen onNavigate={navigate} params={screen.params} />;
           case 'reset-password': 

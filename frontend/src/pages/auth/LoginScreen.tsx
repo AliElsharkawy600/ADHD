@@ -29,10 +29,11 @@ export const LoginScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
 
     try {
       const data = await loginApi({ email, password });
-      // Save token in context
-      login(data.token);
-      // AuthProvider will automatically switch to Home,
-      // but we can ensure navigation or just let the state update trigger re-render
+      if (data.user.hasChildren) {
+        login(data.token);
+      } else {
+        onNavigate('child-setup', { token: data.token });
+      }
     } catch (err: any) {
       setError(err.message || "البريد الإلكتروني أو كلمة المرور غير صحيحة");
     } finally {
@@ -46,7 +47,11 @@ export const LoginScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
       setError("");
       try {
         const data = await googleLoginApi(codeResponse.access_token);
-        login(data.token);
+        if (data.user.hasChildren) {
+          login(data.token);
+        } else {
+          onNavigate('child-setup', { token: data.token });
+        }
       } catch (err: any) {
         setError(err.message || "فشل تسجيل الدخول باستخدام Google");
       } finally {
