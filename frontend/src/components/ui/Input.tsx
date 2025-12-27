@@ -29,9 +29,11 @@ export const Input: React.FC<InputProps> = ({
           {...props}
           type={inputType}
           className={`
-            w-full px-4 py-3.5 pl-10 rounded-xl border text-right
-            transition-all duration-200 outline-none
-            text-gray-800 placeholder-gray-400 bg-gray-50
+            ${icon
+              //  إزالة  pl-10 عند إزالة الايقونة
+              ?'w-full px-4 py-3.5 pl-10 rounded-xl border text-right transition-all duration-200 outline-none text-gray-800 placeholder-gray-400 bg-gray-50'
+              :'w-full px-4 py-3.5 rounded-xl border text-right transition-all duration-200 outline-none text-gray-800 placeholder-gray-400 bg-gray-50'
+            }
             ${error 
               ? 'border-red-400 bg-red-50 focus:border-red-500 focus:ring-1 focus:ring-red-200' 
               : 'border-gray-200 focus:border-[#5CAAF8] focus:ring-4 focus:ring-blue-50/50'
