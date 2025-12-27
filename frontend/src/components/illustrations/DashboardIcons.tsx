@@ -15,7 +15,7 @@ export const EyesIllustration = () => (
 <path d="M52.1917 89.2269C52.1917 90.4746 53.8122 92.2391 54.958 92.2391C56.1038 92.2391 57.0327 90.4746 57.0327 89.2269C57.0327 87.9792 56.1038 86.5913 54.958 86.5913C53.8122 86.5913 52.1917 87.9792 52.1917 89.2269Z" fill="#F4A261"/>
 <path d="M48.1576 78.523C48.1576 79.8598 50.0481 81.3469 51.3849 81.3469C52.7217 81.3469 52.9985 79.8598 52.9985 78.523C52.9985 77.1862 51.9148 76.1025 50.578 76.1025C49.2412 76.1025 48.1576 77.1862 48.1576 78.523Z" fill="#F4A261"/>
 <path d="M158.197 77.3296C158.489 77.5568 158.898 77.5569 159.189 77.3296L163.829 73.7132C164.435 73.2412 164.101 72.27 163.333 72.27H154.054C153.286 72.27 152.952 73.2412 153.558 73.7132L158.197 77.3296Z" fill="#F4A261"/>
-<path d="M151.835 80.1366C154.121 84.0363 160.065 89.4959 165.551 80.1366" stroke="#EA6868" strokeWidth="0.968197" stroke-linecap="round"/>
+<path d="M151.835 80.1366C154.121 84.0363 160.065 89.4959 165.551 80.1366" stroke="#EA6868" strokeWidth="0.968197" strokeLinecap="round"/>
 <path d="M99.3909 36.1639C85.159 36.164 73.5725 47.8772 73.5725 62.3865C73.5726 76.8958 85.1591 88.6081 99.3909 88.6082C113.623 88.6082 125.21 76.8959 125.21 62.3865C125.21 47.8771 113.623 36.1639 99.3909 36.1639Z" stroke="#2A2A2A" strokeWidth="4.03415"/>
 <circle cx="2.82391" cy="2.82391" r="2.82391" transform="matrix(-1 0 0 1 111.897 57.5453)" fill="white"/>
 <path d="M217.996 35.7606C232.456 35.7607 244.217 47.6599 244.217 62.3865C244.217 77.1131 232.456 89.0114 217.996 89.0115C203.535 89.0115 191.773 77.1132 191.773 62.3865C191.773 47.6598 203.535 35.7606 217.996 35.7606Z" stroke="#2A2A2A" strokeWidth="3.22732"/>
@@ -62,12 +62,12 @@ export const EyesIllustration = () => (
 <ellipse cx="9.27855" cy="8.87514" rx="9.27855" ry="8.87514" transform="matrix(-1 0 0 1 226.503 41.4088)" fill="white"/>
 <defs>
 <linearGradient id="paint0_linear_1_2959" x1="103.022" y1="36.5668" x2="103.022" y2="82.5571" gradientUnits="userSpaceOnUse">
-<stop stop-color="#2A2A2A"/>
-<stop offset="1" stop-color="#666666"/>
+<stop stopColor="#2A2A2A"/>
+<stop offset="1" stopColor="#666666"/>
 </linearGradient>
 <linearGradient id="paint1_linear_1_2959" x1="221.71" y1="36.5668" x2="221.71" y2="82.5571" gradientUnits="userSpaceOnUse">
-<stop stop-color="#2A2A2A"/>
-<stop offset="1" stop-color="#666666"/>
+<stop stopColor="#2A2A2A"/>
+<stop offset="1" stopColor="#666666"/>
 </linearGradient>
 </defs>
 </svg>
@@ -94,7 +94,7 @@ export const BoyHeadIllustration = () => (
 <path d="M120.993 94.6598C120.993 95.1075 121.574 95.7407 121.985 95.7407C122.397 95.7407 122.73 95.1075 122.73 94.6598C122.73 94.212 122.397 93.714 121.985 93.714C121.574 93.714 120.993 94.212 120.993 94.6598Z" fill="#F4A261"/>
 <path d="M119.545 90.8187C119.545 91.2984 120.223 91.832 120.703 91.832C121.183 91.832 121.282 91.2984 121.282 90.8187C121.282 90.339 120.893 89.9501 120.414 89.9501C119.934 89.9501 119.545 90.339 119.545 90.8187Z" fill="#F4A261"/>
 <path d="M159.032 90.3902C159.137 90.4717 159.284 90.4717 159.388 90.3902L161.053 89.0925C161.271 88.9231 161.151 88.5746 160.875 88.5746H157.546C157.27 88.5746 157.15 88.9231 157.368 89.0925L159.032 90.3902Z" fill="#F4A261"/>
-<path d="M156.75 91.3977C157.57 92.7971 159.703 94.7562 161.671 91.3977" stroke="#EA6868" strokeWidth="0.347433" stroke-linecap="round"/>
+<path d="M156.75 91.3977C157.57 92.7971 159.703 94.7562 161.671 91.3977" stroke="#EA6868" strokeWidth="0.347433" strokeLinecap="round"/>
 <path d="M137.931 75.6183C132.824 75.6183 128.665 79.8218 128.665 85.0285C128.665 90.235 132.824 94.4376 137.931 94.4376C143.037 94.4374 147.195 90.2348 147.195 85.0285C147.195 79.8219 143.038 75.6185 137.931 75.6183Z" stroke="#2A2A2A" strokeWidth="1.44764"/>
 <circle cx="1.01335" cy="1.01335" r="1.01335" transform="matrix(-1 0 0 1 142.418 83.2909)" fill="white"/>
 <path d="M180.49 75.4738C185.679 75.4738 189.9 79.7438 189.9 85.0285C189.9 90.313 185.679 94.5822 180.49 94.5822C175.302 94.5819 171.081 90.3128 171.081 85.0285C171.081 79.744 175.301 75.474 180.49 75.4738Z" stroke="#2A2A2A" strokeWidth="1.15811"/>
@@ -143,15 +143,15 @@ export const BoyHeadIllustration = () => (
 <path d="M159.796 50.5178C156.66 58.7892 148.43 74.2029 140.597 69.6874C143.093 65.2145 148.123 55.1185 148.277 50.5178C145.525 58.1856 136.067 72.9846 120.247 70.8376C121.952 67.1169 125.827 58.9774 127.847 55.8167C122.618 63.9097 110.417 80.0428 102.776 80.8057C98.6808 62.9141 103.928 26.5175 157.684 24.0638C211.44 21.6101 219.247 60.8694 216.431 80.8057C211.824 78.6332 200.305 70.5692 191.089 55.6936L198.577 70.6459C192.177 71.8599 177.65 69.534 170.739 50.5178C171.827 55.3102 174.886 65.9685 178.418 70.2625C174.067 71.0932 164.25 68.3072 159.796 50.5178Z" fill="#A98668"/>
 </g>
 <path d="M156.043 24.3382C155.915 23.1218 154.698 19.8438 150.857 18C153.512 18.316 158.826 19.9179 159.108 23.8041C159.082 22.9662 159.353 21.268 160.652 20.1127C160.908 20.945 161.267 22.8785 160.652 23.954C160.038 25.0296 157.323 24.7863 156.043 24.3382Z" fill="#A98668"/>
-<path d="M89 83C86.3333 84.7629 86.3333 88.9464 89 92" stroke="#C98358" stroke-linecap="round"/>
-<path d="M87 82C83 84.3506 83 89.9285 87 94" stroke="#C98358" stroke-linecap="round"/>
-<path d="M84 80C78.6667 82.9383 78.6667 89.9107 84 95" stroke="#C98358" stroke-linecap="round"/>
-<path d="M230 83C232.667 84.7629 232.667 88.9464 230 92" stroke="#C98358" stroke-linecap="round"/>
-<path d="M232 82C236 84.3506 236 89.9285 232 94" stroke="#C98358" stroke-linecap="round"/>
-<path d="M235 80C240.333 82.9383 240.333 89.9107 235 95" stroke="#C98358" stroke-linecap="round"/>
+<path d="M89 83C86.3333 84.7629 86.3333 88.9464 89 92" stroke="#C98358" strokeLinecap="round"/>
+<path d="M87 82C83 84.3506 83 89.9285 87 94" stroke="#C98358" strokeLinecap="round"/>
+<path d="M84 80C78.6667 82.9383 78.6667 89.9107 84 95" stroke="#C98358" strokeLinecap="round"/>
+<path d="M230 83C232.667 84.7629 232.667 88.9464 230 92" stroke="#C98358" strokeLinecap="round"/>
+<path d="M232 82C236 84.3506 236 89.9285 232 94" stroke="#C98358" strokeLinecap="round"/>
+<path d="M235 80C240.333 82.9383 240.333 89.9107 235 95" stroke="#C98358" strokeLinecap="round"/>
 <defs>
-<filter id="filter0_d_1_3136" x="101.688" y="23.954" width="115.24" height="58.3883" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<filter id="filter0_d_1_3136" x="101.688" y="23.954" width="115.24" height="58.3883" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+<feFlood floodOpacity="0" result="BackgroundImageFix"/>
 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
 <feOffset dy="1.53653"/>
 <feComposite in2="hardAlpha" operator="out"/>
@@ -160,12 +160,12 @@ export const BoyHeadIllustration = () => (
 <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_3136" result="shape"/>
 </filter>
 <linearGradient id="paint0_linear_1_3136" x1="139.233" y1="75.7634" x2="139.233" y2="92.2665" gradientUnits="userSpaceOnUse">
-<stop stop-color="#2A2A2A"/>
-<stop offset="1" stop-color="#666666"/>
+<stop stopColor="#2A2A2A"/>
+<stop offset="1" stopColor="#666666"/>
 </linearGradient>
 <linearGradient id="paint1_linear_1_3136" x1="181.824" y1="75.7634" x2="181.824" y2="92.2665" gradientUnits="userSpaceOnUse">
-<stop stop-color="#2A2A2A"/>
-<stop offset="1" stop-color="#666666"/>
+<stop stopColor="#2A2A2A"/>
+<stop offset="1" stopColor="#666666"/>
 </linearGradient>
 </defs>
 </svg>
