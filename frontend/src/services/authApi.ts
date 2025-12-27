@@ -4,7 +4,7 @@ import { request } from "./request";
 export const register = (data: any) => request("/register", "POST", data);
 
 // التحقق من البريد الإلكتروني
-export const verifyEmail = (data: { email: string; code: string; password: string}) =>
+export const verifyEmail = (data: { email: string; code: string; password?: string}) =>
   request("/verify-email", "POST", data);
 
 // تسجيل الدخول
@@ -22,6 +22,16 @@ export const resetPassword = (data: any) =>
 export const googleLogin = (accessToken: string) =>
   request("/google", "POST", { accessToken });
 
-// إعداد ملف الطفل (يستخدم التوكن المؤقت في الهيدر)
-export const setupChildProfile = (data: { name: string; age: number; parentPhoneNumber}, token: string) =>
+// إعداد ملف الطفل (تم التحديث ليشمل البيانات الجديدة)
+export interface ChildProfileData {
+  name: string;
+  birthDate: string;
+  gender: 'male' | 'female';
+  country: string;
+  city: string;
+  // address: string;
+  parentPhoneNumber: string;
+}
+
+export const setupChildProfile = (data: ChildProfileData, token: string) =>
   request("/addChild", "POST", data, { Authorization: `Bearer ${token}` });
