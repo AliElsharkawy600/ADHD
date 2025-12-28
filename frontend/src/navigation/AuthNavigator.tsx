@@ -14,6 +14,7 @@ import { VisualGamesScreen } from "../pages/home/VisualGamesScreen";
 import { ParentGateScreen } from "../pages/auth/ParentGateScreen";
 import { PremiumPlansScreen } from "../pages/auth/PremiumPlansScreen";
 import { useAuth } from "../context/AuthContext";
+import Balloon from "../components/games/balloon/balloon";
 
 interface ScreenState {
   name: string;
@@ -94,6 +95,10 @@ export const AuthNavigator: React.FC = () => {
         );
       case "premium-plans":
         return <PremiumPlansScreen onNavigate={navigate} />;
+      case "balloon": {
+        const BalloonComp = Balloon as any;
+        return <BalloonComp onNavigate={navigate} />;
+      }
       default:
         return <WelcomeScreen onNavigate={navigate} />;
     }

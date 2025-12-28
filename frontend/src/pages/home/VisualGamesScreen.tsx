@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { ScreenProps } from "../../types";
 import { PremiumPopup } from "../../components/ui/PremiumPopup";
+import dogPhoto from "../../assets/dog.png";
+import path from "path";
 
 const GAMES = [
   {
@@ -35,6 +37,7 @@ const GAMES = [
         />
       </svg>
     ),
+    path: "balloon",
   },
   {
     id: 2,
@@ -42,6 +45,7 @@ const GAMES = [
     desc: "تحديد الاتجاه",
     isPremium: true,
     color: "bg-orange-100",
+    icon: <img src={dogPhoto} alt="Game Icon" />,
   },
   {
     id: 3,
@@ -459,61 +463,87 @@ export const VisualGamesScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
 
   return (
     <div className="flex flex-col h-full bg-white p-6 dir-rtl">
+      {/* Header */}
       <div className="grid grid-cols-3 items-center pt-4 mb-6" dir="rtl">
-        {/* السهم في أقصى اليمين */}
+        {/* السهم */}
         <div className="flex justify-start">
           <button
             onClick={() => onNavigate("home")}
             className="p-2 text-black-500 text-4xl"
           >
-            {"<"} {/* غيرت الاتجاه ليكون مناسباً للغة العربية */}
+            {"<"}
           </button>
         </div>
 
-        {/* العنوان في المنتصف تماماً */}
+        {/* العنوان */}
         <h1 className="text-2xl font-bold text-gray-800 text-center whitespace-nowrap">
           العلاج البصري
         </h1>
 
-        {/* مساحة فارغة في اليسار لضمان بقاء العنوان في المنتصف */}
         <div className="w-10"></div>
       </div>
 
+      {/* Games */}
       <div className="space-y-6">
         {GAMES.map((game) => (
           <div
             key={game.id}
-            onClick={() => (game.isPremium ? setShowPopup(true) : null)}
+            onClick={() => {
+              if (game.isPremium) {
+                setShowPopup(true);
+              } else {
+                onNavigate(game.path);
+              }
+            }}
             className={`relative flex items-center p-6 rounded-2xl border-2 ${
-              game.isPremium ? "border-gray-200" : "border-blue-200"
+              game.isPremium ? "bg-gray-100 border-gray-300" : "border-blue-200"
             } cursor-pointer`}
           >
+            {/* Icon Card */}
             <div
-              className={`w-20 h-20 rounded-xl ${game.color} flex items-center justify-center relative `}
+              className={`w-20 h-20 rounded-xl ${game.color} flex items-center justify-center relative`}
             >
-              {/* هنا توضع الأيقونة */}
+              {/* Game Icon */}
               {game.icon}
 
+              {/* Lock in Center */}
               {game.isPremium && (
                 <div
-                  className="absolute 
-      -top-3 
-      left-1/2 
-      -translate-x-1/2
-      bg-white 
-      rounded-full 
-      p-1
-      shadow"
+                  className="
+                absolute
+                top-1/2
+                left-1/2
+                -translate-x-1/2
+                -translate-y-1/2
+                bg-white
+                rounded-full
+                p-1
+                shadow
+              "
                 >
-                  🔒
+                  <svg
+                    width="20"
+                    height="22"
+                    viewBox="0 0 20 22"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8.75 0C11.7876 0 14.25 2.49988 14.25 5.58301V7.38672C15.8176 7.87368 17.0009 9.27365 17.2256 10.9678C17.2381 11.0641 17.14 11.1368 17.0498 11.1006C16.338 10.8146 15.562 10.6572 14.75 10.6572C11.2984 10.6572 8.50025 13.4976 8.5 17.001C8.5 18.3597 8.92107 19.6191 9.6377 20.6514C10.0292 21.2153 10.2244 21.4974 10.1406 21.6582C10.0567 21.8187 9.74354 21.8201 9.11719 21.8223C8.99562 21.8227 8.87324 21.8223 8.75 21.8223C7.15423 21.8223 5.70376 21.7883 4.27539 21.7217C2.21733 21.6256 0.545984 20.0072 0.274414 17.96C0.126286 16.8432 0 15.6697 0 14.4639C5.38917e-06 13.258 0.126281 12.0845 0.274414 10.9678C0.499139 9.27365 1.68236 7.87368 3.25 7.38672V5.58301C3.25 2.49988 5.71243 0 8.75 0ZM14.75 12.1807C17.3732 12.1807 19.4998 14.3385 19.5 17.001C19.5 19.6637 17.3734 21.8223 14.75 21.8223C12.1266 21.8223 10 19.6637 10 17.001C10.0002 14.3385 12.1268 12.1807 14.75 12.1807ZM13.418 16.2402C13.0039 16.2402 12.6682 16.5808 12.668 17.001C12.668 17.4214 13.0038 17.7627 13.418 17.7627H16.085C16.499 17.7625 16.835 17.4213 16.835 17.001C16.8347 16.5809 16.4989 16.2404 16.085 16.2402H13.418ZM8.75 2.03027C6.817 2.03027 5.25 3.62102 5.25 5.58301V7.16699C6.36774 7.12672 7.51537 7.10547 8.75 7.10547C9.98463 7.10547 11.1323 7.12672 12.25 7.16699V5.58301C12.25 3.62102 10.683 2.03027 8.75 2.03027Z"
+                      fill="#DFDFDF"
+                    />
+                  </svg>
                 </div>
               )}
             </div>
+
+            {/* Text */}
             <div className="mr-4 flex-1 text-right">
               <h3 className="font-bold text-lg">{game.title}</h3>
               <p className="text-gray-500 text-sm">{game.desc}</p>
             </div>
 
+            {/* Play Button */}
             <div>
               <svg
                 width="48"
@@ -526,55 +556,19 @@ export const VisualGamesScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
                   <path
                     d="M48 24C48 10.7452 37.2548 0 24 0C10.7452 0 0 10.7452 0 24C0 37.2548 10.7452 48 24 48C37.2548 48 48 37.2548 48 24Z"
                     fill="#488DFF"
-                    shapeRendering="crispEdges"
                   />
                   <path
-                    d="M32 24V20.44C32 16.02 28.87 14.21 25.04 16.42L21.95 18.2L18.86 19.98C15.03 22.19 15.03 25.81 18.86 28.02L21.95 29.8L25.04 31.58C28.87 33.79 32 31.98 32 27.56V24Z"
+                    d="M32 24V20.44C32 16.02 28.87 14.21 25.04 16.42L18.86 19.98C15.03 22.19 15.03 25.81 18.86 28.02L25.04 31.58C28.87 33.79 32 31.98 32 27.56V24Z"
                     fill="#FFFCF3"
                   />
                 </g>
-                <defs>
-                  <filter
-                    id="filter0_d_227_2506"
-                    x="0"
-                    y="0"
-                    width="48"
-                    height="50"
-                    filterUnits="userSpaceOnUse"
-                    colorInterpolationFilters="sRGB"
-                  >
-                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
-                    <feColorMatrix
-                      in="SourceAlpha"
-                      type="matrix"
-                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                      result="hardAlpha"
-                    />
-                    <feOffset dy="2" />
-                    <feComposite in2="hardAlpha" operator="out" />
-                    <feColorMatrix
-                      type="matrix"
-                      values="0 0 0 0 0.101961 0 0 0 0 0.443137 0 0 0 0 1 0 0 0 1 0"
-                    />
-                    <feBlend
-                      mode="normal"
-                      in2="BackgroundImageFix"
-                      result="effect1_dropShadow_227_2506"
-                    />
-                    <feBlend
-                      mode="normal"
-                      in="SourceGraphic"
-                      in2="effect1_dropShadow_227_2506"
-                      result="shape"
-                    />
-                  </filter>
-                </defs>
               </svg>
             </div>
           </div>
         ))}
       </div>
 
+      {/* Premium Popup */}
       {showPopup && (
         <PremiumPopup
           onClose={() => setShowPopup(false)}

@@ -104,21 +104,21 @@ exports.verifyEmail = async (req, res) => {
     user.verificationCodeExpires = undefined;
     await user.save();
 
-  const token = jwt.sign(
-    { id: user._id, email: user.email },
-    process.env.JWT_SECRET,
-    { expiresIn: "7d" }
-  );
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
 
-  res.json({
-    message: "تم التحقق من الحساب بنجاح" ,
-    token,
-    user: {
-      id: user._id,
-      email: user.email,
-      hasChildren: user.children.length > 0,
-    },
-  });
+    res.json({
+      message: "تم التحقق من الحساب بنجاح",
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        hasChildren: user.children.length > 0,
+      },
+    });
     // res.json({ message: "تم التحقق من الحساب بنجاح" });
   } catch (error) {
     res.status(500).json({ message: "خطأ في السيرفر" });
@@ -343,12 +343,20 @@ exports.googleLogin = async (req, res) => {
 
 // create child for parent
 exports.addChild = async (req, res) => {
-  // const { name, birthDate, gender, country, city } = req.body;
-  const { name, age, parentPhoneNumber} = req.body;
+  const { name, parentPhoneNumber, birthDate, gender, country, city } =
+    req.body;
+  // const { name, age, parentPhoneNumber} = req.body;
   const parentId = req.user.id; // جاي من JWT middleware
 
-  // if (!name || !birthDate || !gender || !country || !city) {
-  if (!name || !age || !parentPhoneNumber) {
+  if (
+    !name ||
+    !parentPhoneNumber ||
+    !birthDate ||
+    !gender ||
+    !country ||
+    !city
+  ) {
+    // if (!name || !age || !parentPhoneNumber) {
     return res.status(400).json({ message: "كل الحقول مطلوبة" });
   }
 
@@ -361,12 +369,12 @@ exports.addChild = async (req, res) => {
     // 1️⃣ Create child WITH parent
     const child = await Child.create({
       name,
-      age,
+      // age,
       parentPhoneNumber,
-      // birthDate,
-      // gender,
-      // country,
-      // city,
+      birthDate,
+      gender,
+      country,
+      city,
       parent: parentId,
     });
 
@@ -381,6 +389,7 @@ exports.addChild = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(400).json({ message: "فشل في إنشاء الطفل" });
+    // res.status(400).json({ message: "فشل في إنشاء الطفل" });
+    res.status(400).json({ message: err.message || "فشل في إنشاء الطفل" });
   }
 };

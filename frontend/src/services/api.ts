@@ -4,6 +4,10 @@ const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
+    // // الحل لمشكلة ngrok
+    // "ngrok-skip-browser-warning": "true",
+    // // الحل لمشكلة localtunnel
+    // "Bypass-Tunnel-Reminder": "true",
   },
 });
 
