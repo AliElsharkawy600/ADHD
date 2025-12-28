@@ -24,7 +24,7 @@ const BalloonGame = () => {
   // دالة إرسال النتيجة واستقبال الـ Response الموضح في الـ Postman
   const saveToBackend = async (finalScore: number) => {
     try {
-      const response = await fetch("http://localhost:5000/api/scores/save", {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/scores/save`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ score: finalScore, total: totalSteps }),
