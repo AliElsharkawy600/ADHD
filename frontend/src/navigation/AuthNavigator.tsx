@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { App as CapacitorApp } from "@capacitor/app"; // استيراد كباستور للتحكم في زر الموبايل
 import { WelcomeScreen } from "../pages/auth/WelcomeScreen";
 import { LoginScreen } from "../pages/auth/LoginScreen";
 import { SignupScreen } from "../pages/auth/SignupScreen";
@@ -14,7 +15,7 @@ import { VisualGamesScreen } from "../pages/home/VisualGamesScreen";
 import { ParentGateScreen } from "../pages/auth/ParentGateScreen";
 import { PremiumPlansScreen } from "../pages/auth/PremiumPlansScreen";
 import { useAuth } from "../context/AuthContext";
-import Balloon from "../components/games/balloon/balloon";
+import { BalloonGameScreen } from "../pages/games/balloon/BalloonGameScreen";
 
 interface ScreenState {
   name: string;
@@ -22,27 +23,76 @@ interface ScreenState {
 }
 
 export const AuthNavigator: React.FC = () => {
-  // 1. استخراج حالة التوثيق من الـ Context
   const { isAuthenticated } = useAuth();
 
-  // 2. التعديل هنا: تحديد الشاشة الابتدائية بناءً على حالة المستخدم
-  // إذا كان مسجل دخول نذهب لـ "home"، وإذا لم يكن نذهب لـ "welcome"
+  // الحالة الابتدائية للشاشة
   const [screen, setScreen] = useState<ScreenState>({
     name: isAuthenticated ? "home" : "welcome",
   });
 
-  // --- الجزء الجديد: مراقبة حالة تسجيل الدخول ---
-  useEffect(() => {
-    if (isAuthenticated) {
-      setScreen({ name: "home" });
-    } else {
-      setScreen({ name: "welcome" });
-    }
-  }, [isAuthenticated]); // كرر التنفيذ كلما تغيرت isAuthenticated
+  // 1. معالجة التنقل (Navigation) وتسجيله في الـ History
+const navigate = (to: string, params?: any, options?: { replace?: boolean, isBack?: boolean }) => {
+  if (options?.isBack) {
+    window.history.back();
+    return;
+  }
+  
+  const nextScreen = { name: to, params };
+  // تسجيل الشاشة الجديدة في تاريخ المتصفح (Web History)
+  window.history.pushState(nextScreen, "");
+  setScreen(nextScreen);
+};
 
-  const navigate = (to: string, params?: any) => {
-    setScreen({ name: to, params });
-  };
+
+
+  // 2. الاستماع لحدث الرجوع (popstate) سواء من المتصفح أو زر الرجوع
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state) {
+        // إذا رجع المستخدم، نأخذ البيانات المخزنة مسبقاً ونعرضها
+        setScreen(event.state);
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    // تسجيل الحالة الأولى في التاريخ عند تشغيل التطبيق لأول مرة
+    if (!window.history.state) {
+      window.history.replaceState({ name: isAuthenticated ? "home" : "welcome" }, "");
+    }
+
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  // 3. ربط زر الرجوع الفعلي في أجهزة الأندرويد (Capacitor)
+  useEffect(() => {
+    const setupBackButton = async () => {
+      await CapacitorApp.addListener('backButton', () => {
+        // إذا كان هناك تاريخ للرجوع، ارجع للخلف (هذا سيحفز popstate تلقائياً)
+        if (window.history.length > 1) {
+          window.history.back();
+        } else {
+          // إذا كنت في أول شاشة، أغلق التطبيق
+          CapacitorApp.exitApp();
+        }
+      });
+    };
+
+    setupBackButton();
+
+    return () => {
+      CapacitorApp.removeAllListeners();
+    };
+  }, []);
+
+  // مراقبة حالة تسجيل الدخول وتصفير التاريخ عند التغيير
+  useEffect(() => {
+    const initialScreen = { name: isAuthenticated ? "home" : "welcome" };
+    setScreen(initialScreen);
+    // عند تسجيل الدخول أو الخروج، نريد تصفير التاريخ القديم
+    window.history.replaceState(initialScreen, "");
+  }, [isAuthenticated]);
+
   const renderScreen = () => {
     switch (screen.name) {
       case "welcome":
@@ -83,7 +133,6 @@ export const AuthNavigator: React.FC = () => {
         );
       case "home":
         return <HomeScreen onNavigate={navigate} />;
-      // أضف هذه الحالات داخل renderScreen
       case "visual-games":
         return <VisualGamesScreen onNavigate={navigate} />;
       case "parent-gate":
@@ -95,10 +144,8 @@ export const AuthNavigator: React.FC = () => {
         );
       case "premium-plans":
         return <PremiumPlansScreen onNavigate={navigate} />;
-      case "balloon": {
-        const BalloonComp = Balloon as any;
-        return <BalloonComp onNavigate={navigate} />;
-      }
+      case "balloon":
+        return <BalloonGameScreen onNavigate={navigate} />;
       default:
         return <WelcomeScreen onNavigate={navigate} />;
     }
