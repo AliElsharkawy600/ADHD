@@ -110,6 +110,9 @@ exports.verifyEmail = async (req, res) => {
       { expiresIn: "7d" }
     );
 
+    const parent = await Parent.findOne({ email });
+    const child = (await Child.findOne({ parent: parent?._id })) || null;
+
     res.json({
       message: "تم التحقق من الحساب بنجاح",
       token,
@@ -117,6 +120,8 @@ exports.verifyEmail = async (req, res) => {
         id: user._id,
         email: user.email,
         hasChildren: user.children.length > 0,
+        name: child?.name || null,
+        gender: child?.gender || null,
       },
     });
     // res.json({ message: "تم التحقق من الحساب بنجاح" });
@@ -130,6 +135,7 @@ exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   const parent = await Parent.findOne({ email });
+  const child = await Child.findOne({ parent: parent?._id });
   if (!parent) return res.status(400).json({ message: "بيانات غير صحيحة" });
 
   const match = await bcrypt.compare(password, parent.password);
@@ -147,6 +153,8 @@ exports.login = async (req, res) => {
       id: parent._id,
       email: parent.email,
       hasChildren: parent.children.length > 0,
+      name: child?.name || null,
+      gender: child?.gender || null,
     },
   });
 };
@@ -321,6 +329,8 @@ exports.googleLogin = async (req, res) => {
       });
     }
 
+    const child = await Child.findOne({ parent: parent?._id });
+
     // 3️⃣ Create JWT
     const token = jwt.sign({ id: parent._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
@@ -333,6 +343,8 @@ exports.googleLogin = async (req, res) => {
         id: parent._id,
         email: parent.email,
         hasChildren: parent.children.length > 0,
+        name: child?.name || null,
+        gender: child?.gender || null,
       },
     });
   } catch (err) {
@@ -386,6 +398,8 @@ exports.addChild = async (req, res) => {
     res.status(201).json({
       message: "تم إنشاء الطفل بنجاح",
       childId: child._id,
+      name,
+      gender,
     });
   } catch (err) {
     console.error(err);
