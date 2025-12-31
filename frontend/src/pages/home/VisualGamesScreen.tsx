@@ -25,9 +25,10 @@ const GAMES = [
     id: 2,
     title: "توصيل الهدف",
     desc: "تحديد الاتجاه",
-    isPremium: true,
+    isPremium: false,
     color: "bg-orange-100",
-    icon: <img src={dogPhoto} alt="Game Icon" className="w-full h-full object-contain" />,
+    icon: <img src={dogPhoto} alt="Game Icon" className="w-full h-full" />,
+    path: "matching",
   },
   {
     id: 3,
@@ -79,6 +80,7 @@ export const VisualGamesScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
               if (game.isPremium) {
                 setShowPopup(true);
               } else if (game.path) {
+                console.log("Navigating to:", game.path);
                 onNavigate(game.path);
               }
             }}
