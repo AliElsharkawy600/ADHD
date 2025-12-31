@@ -141,8 +141,25 @@ exports.login = async (req, res) => {
   const match = await bcrypt.compare(password, parent.password);
   if (!match) return res.status(400).json({ message: "بيانات غير صحيحة" });
 
+  // admin mail and password and role doctor pass token as doctor
+  if( email === 'admin@admin.com' && password === 'admin' ){
+    const adminToken = jwt.sign(
+      { id: parent._id, role: "doctor", email: parent.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+    return res.json({
+      token: adminToken,
+      user: {
+        id: parent._id,
+        email: parent.email,
+        role: "doctor",
+      },
+    });
+  }
+
   const token = jwt.sign(
-    { id: parent._id, email: parent.email },
+    { id: parent._id, role: parent.role, email: parent.email },
     process.env.JWT_SECRET,
     { expiresIn: "7d" }
   );
