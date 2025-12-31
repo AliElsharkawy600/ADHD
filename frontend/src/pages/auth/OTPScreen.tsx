@@ -43,8 +43,7 @@ export const OTPScreen: React.FC<ScreenProps> = ({ onNavigate, params }) => {
       
       // Check if user has child profile (Backend logic)
       if (response.user.hasChildren) {
-        // onNavigate('success-signup');
-        login(response.token);
+        login(response.token, { name: response.user.name, gender: response.user.gender });
       } else {
         // Redirect to child setup with the token
         onNavigate('child-setup', { token: response.token });

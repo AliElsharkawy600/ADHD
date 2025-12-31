@@ -30,7 +30,8 @@ export const LoginScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
     try {
       const data = await loginApi({ email, password });
       if (data.user.hasChildren) {
-        login(data.token);
+        // Pass the user object to login context
+        login(data.token, { name: data.user.name, gender: data.user.gender });
       } else {
         onNavigate('child-setup', { token: data.token });
       }
@@ -48,7 +49,8 @@ export const LoginScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
       try {
         const data = await googleLoginApi(codeResponse.access_token);
         if (data.user.hasChildren) {
-          login(data.token);
+          // Pass the user object to login context
+          login(data.token, { name: data.user.name, gender: data.user.gender });
         } else {
           onNavigate('child-setup', { token: data.token });
         }

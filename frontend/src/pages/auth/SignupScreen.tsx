@@ -55,7 +55,8 @@ export const SignupScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
       try {
         const data = await googleLoginApi(codeResponse.access_token);
         if (data.user.hasChildren) {
-          login(data.token);
+          // Pass user data to login
+          login(data.token, { name: data.user.name, gender: data.user.gender });
         } else {
           onNavigate('child-setup', { token: data.token });
         }
