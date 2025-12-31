@@ -1,5 +1,20 @@
 
 import React from 'react';
+import sheepImg from "@/assets/animal-match/sheep.svg";
+import grassImg from "@/assets/animal-match/grass.svg";
+import catImg from "@/assets/animal-match/cat.svg";
+import milkImg from "@/assets/animal-match/milk.svg";
+import dogImg from "@/assets/animal-match/dog.svg";
+import boneImg from "@/assets/animal-match/bone.svg";
+import sheepEatingGrassImg from "@/assets/animal-match/sheep-grass.svg";
+import catDrinkMilkImg from "@/assets/animal-match/cat-milk.svg";
+import dogWithBoneImg from "@/assets/animal-match/dog-bone.svg";
+import greatJobBadgeImg from "@/assets/animal-match/great-job-badge.svg";
+
+interface IconProps {
+  className?: string;
+}
+
 
 export const CloudShape = ({ className = "" }: { className?: string }) => (
   <svg className={className} viewBox="0 0 206 70" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -296,8 +311,178 @@ export const BoyCharacter = ({ mood }: { mood: 'success' | 'failure' }) => {
     </div>
   );
 };
+/* -------------------------------------------------------------------------- */
+/*                        Animal Match Game Placeholders                       */
+/* -------------------------------------------------------------------------- */
 
+const baseCard = (options: {
+  className?: string;
+  stroke?: string;
+  fill?: string;
+}) => (
+  <svg
+    className={options.className}
+    viewBox="0 0 120 120"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+  >
+    <rect
+      x="4"
+      y="4"
+      width="112"
+      height="112"
+      rx="28"
+      fill={options.fill ?? "#F5F8FF"}
+      stroke={options.stroke ?? "#C9D9FF"}
+      strokeWidth="8"
+    />
+  </svg>
+);
 
+export const SheepIcon: React.FC<IconProps> = ({ className }) => (
+  <div className={`relative ${className ?? ""}`}>
+    {baseCard({
+      className: "absolute inset-0",
+      fill: "#F8FBFF",
+      stroke: "#CCE4FF",
+    })}
+    <img
+      src={sheepImg}
+      alt="Sheep Icon"
+      className="relative w-full h-full object-contain"
+    />
+  </div>
+);
+
+export const CatIcon: React.FC<IconProps> = ({ className }) => (
+  <div className={`relative ${className ?? ""}`}>
+    {baseCard({
+      className: "absolute inset-0",
+      fill: "#F8FBFF",
+      stroke: "#CCE4FF",
+    })}
+    <img
+      src={catImg}
+      alt="Cat Icon"
+      className="relative w-full h-full object-contain"
+    />
+  </div>
+);
+
+export const DogIcon: React.FC<IconProps> = ({ className }) => (
+  <div className={`relative ${className ?? ""}`}>
+    {baseCard({
+      className: "absolute inset-0",
+      fill: "#F8FBFF",
+      stroke: "#CCE4FF",
+    })}
+    <img
+      src={dogImg}
+      alt="Dog Icon"
+      className="relative w-full h-full object-contain"
+    />
+  </div>
+);
+
+export const GrassTargetIcon: React.FC<IconProps> = ({ className }) => (
+  <div className={`relative ${className ?? ""}`}>
+    {baseCard({
+      className: "absolute inset-0",
+      fill: "#EEFFF3",
+      stroke: "#CCE4FF",
+    })}
+    <img
+      src={grassImg}
+      alt="grass target Icon"
+      className="relative w-full h-full object-contain"
+    />
+  </div>
+);
+
+export const MilkTargetIcon: React.FC<IconProps> = ({ className }) => (
+  <div className={`relative ${className ?? ""}`}>
+    {baseCard({
+      className: "absolute inset-0",
+      fill: "#F1F9FF",
+      stroke: "#CCE4FF",
+    })}
+    <img
+      src={milkImg}
+      alt="milk target Icon"
+      className="relative w-full h-full object-contain"
+    />
+  </div>
+);
+
+export const BoneTargetIcon: React.FC<IconProps> = ({ className }) => (
+  <div className={`relative ${className ?? ""}`}>
+    {baseCard({
+      className: "absolute inset-0",
+      fill: "#FFF7EF",
+      stroke: "#CCE4FF",
+    })}
+    <img
+      src={boneImg}
+      alt="bone target Icon"
+      className="relative w-[90%] h-full object-contain top-5"
+    />
+  </div>
+);
+
+export const SheepEatingGrassIcon: React.FC<IconProps> = ({ className }) => (
+  <div className={`relative ${className ?? ""}`}>
+    {baseCard({
+      className: "absolute inset-0",
+      fill: "#ECFDF3",
+      stroke: "",
+    })}
+    <img
+      src={sheepEatingGrassImg}
+      alt="sheep eating grass Icon"
+      className="relative w-full h-full object-contain"
+    />
+  </div>
+);
+
+export const CatDrinkingMilkIcon: React.FC<IconProps> = ({ className }) => (
+  <div className={`relative ${className ?? ""}`}>
+    {baseCard({
+      className: "absolute inset-0",
+      fill: "#F2FBFF",
+      stroke: "",
+    })}
+    <img
+      src={catDrinkMilkImg}
+      alt="cat drinking milk Icon"
+      className="relative w-full h-full object-contain"
+    />
+  </div>
+);
+
+export const DogWithBoneIcon: React.FC<IconProps> = ({ className }) => (
+  <div className={`relative ${className ?? ""}`}>
+    {baseCard({
+      className: "absolute inset-0",
+      fill: "#FFF9F1",
+      stroke: "",
+    })}
+    <img
+      src={dogWithBoneImg}
+      alt="dog with bone Icon"
+      className="relative w-full h-full object-contain"
+    />
+  </div>
+);
+
+export const GreatJobBadge: React.FC<IconProps> = ({ className }) => (
+  <div className={`relative ${className ?? ""}`}>
+    <img
+      src={greatJobBadgeImg}
+      alt="sheep eating grass Icon"
+      className="relative w-full h-full object-contain"
+    />
+  </div>
+);
 
 
 

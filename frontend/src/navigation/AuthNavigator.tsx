@@ -16,6 +16,8 @@ import { ParentGateScreen } from "../pages/auth/ParentGateScreen";
 import { PremiumPlansScreen } from "../pages/auth/PremiumPlansScreen";
 import { useAuth } from "../context/AuthContext";
 import { BalloonGameScreen } from "../pages/games/balloon/BalloonGameScreen";
+import { AnimalMatchGameScreen } from "../pages/games/animal-match/AnimalMatchGameScreen";
+
 
 interface ScreenState {
   name: string;
@@ -31,19 +33,21 @@ export const AuthNavigator: React.FC = () => {
   });
 
   // 1. معالجة التنقل (Navigation) وتسجيله في الـ History
-const navigate = (to: string, params?: any, options?: { replace?: boolean, isBack?: boolean }) => {
-  if (options?.isBack) {
-    window.history.back();
-    return;
-  }
-  
-  const nextScreen = { name: to, params };
-  // تسجيل الشاشة الجديدة في تاريخ المتصفح (Web History)
-  window.history.pushState(nextScreen, "");
-  setScreen(nextScreen);
-};
+  const navigate = (
+    to: string,
+    params?: any,
+    options?: { replace?: boolean; isBack?: boolean }
+  ) => {
+    if (options?.isBack) {
+      window.history.back();
+      return;
+    }
 
-
+    const nextScreen = { name: to, params };
+    // تسجيل الشاشة الجديدة في تاريخ المتصفح (Web History)
+    window.history.pushState(nextScreen, "");
+    setScreen(nextScreen);
+  };
 
   // 2. الاستماع لحدث الرجوع (popstate) سواء من المتصفح أو زر الرجوع
   useEffect(() => {
@@ -58,7 +62,10 @@ const navigate = (to: string, params?: any, options?: { replace?: boolean, isBac
 
     // تسجيل الحالة الأولى في التاريخ عند تشغيل التطبيق لأول مرة
     if (!window.history.state) {
-      window.history.replaceState({ name: isAuthenticated ? "home" : "welcome" }, "");
+      window.history.replaceState(
+        { name: isAuthenticated ? "home" : "welcome" },
+        ""
+      );
     }
 
     return () => window.removeEventListener("popstate", handlePopState);
@@ -184,6 +191,8 @@ const navigate = (to: string, params?: any, options?: { replace?: boolean, isBac
         return <PremiumPlansScreen onNavigate={navigate} />;
       case "balloon":
         return <BalloonGameScreen onNavigate={navigate} />;
+      case "matching":
+        return <AnimalMatchGameScreen onNavigate={navigate} />;
       default:
         return <WelcomeScreen onNavigate={navigate} />;
     }
