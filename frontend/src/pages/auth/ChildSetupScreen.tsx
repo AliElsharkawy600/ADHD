@@ -81,6 +81,7 @@ export const ChildSetupScreen: React.FC<ScreenProps> = ({
     setLoading(true);
 
     try {
+      // Gender is guaranteed to be "male" or "female" here due to the check above
       await setupChildProfile(
         {
           name,
@@ -93,7 +94,10 @@ export const ChildSetupScreen: React.FC<ScreenProps> = ({
         tempToken
       );
 
-      login(tempToken);
+      // Now we have the user data locally (name, gender) and the token.
+      // Although setupChildProfile might not return the full user object structured like the login response,
+      // we know the data we just sent.
+      login(tempToken, { name: name, gender: gender as "male" | "female" });
     } catch (err: any) {
       setError(err.message || "حدث خطأ أثناء حفظ البيانات");
     } finally {
@@ -184,7 +188,7 @@ export const ChildSetupScreen: React.FC<ScreenProps> = ({
             اختار جنس طفلك
           </label>
           <div className="flex gap-3">
-
+            
             {/* Male Option */}
             <label
               className={`

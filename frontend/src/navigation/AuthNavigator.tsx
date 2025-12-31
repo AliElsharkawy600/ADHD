@@ -71,16 +71,41 @@ export const AuthNavigator: React.FC = () => {
     return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
+  // // 3. ربط زر الرجوع الفعلي في أجهزة الأندرويد (Capacitor)
+  // useEffect(() => {
+  //   const setupBackButton = async () => {
+  //     await CapacitorApp.addListener('backButton', () => {
+  //       // إذا كان هناك تاريخ للرجوع، ارجع للخلف (هذا سيحفز popstate تلقائياً)
+  //       if (window.history.length > 1) {
+  //         window.history.back();
+  //       } else {
+  //         // إذا كنت في أول شاشة، أغلق التطبيق
+  //         CapacitorApp.exitApp();
+  //       }
+  //     });
+  //   };
+
+  //   setupBackButton();
+
+  //   return () => {
+  //     CapacitorApp.removeAllListeners();
+  //   };
+  // }, []);
+
+
   // 3. ربط زر الرجوع الفعلي في أجهزة الأندرويد (Capacitor)
   useEffect(() => {
     const setupBackButton = async () => {
-      await CapacitorApp.addListener("backButton", () => {
-        // إذا كان هناك تاريخ للرجوع، ارجع للخلف (هذا سيحفز popstate تلقائياً)
-        if (window.history.length > 1) {
-          window.history.back();
-        } else {
-          // إذا كنت في أول شاشة، أغلق التطبيق
+      await CapacitorApp.addListener('backButton', () => {
+        // نحدد هنا الشاشات التي نعتبرها "جذور" للتطبيق ويجب الخروج عندها
+        const isRootScreen = screen.name === "home" || screen.name === "welcome";
+
+        if (isRootScreen) {
+          // إذا كان في المنزل أو الترحيب، أغلق التطبيق مباشرة
           CapacitorApp.exitApp();
+        } else {
+          // في أي شاشة أخرى، ارجع للخلف في التاريخ
+          window.history.back();
         }
       });
     };
@@ -88,9 +113,22 @@ export const AuthNavigator: React.FC = () => {
     setupBackButton();
 
     return () => {
+      // تنظيف المستمع عند مسح الكومبوننت
       CapacitorApp.removeAllListeners();
     };
-  }, []);
+  }, [screen.name]); // ضروري إضافة screen.name هنا ليتحدث المستمع بأحدث شاشة
+
+  // // // 3. ربط زر الرجوع الفعلي في أجهزة الأندرويد (Capacitor)
+  // useEffect(() => {
+  //   CapacitorApp.addListener('backButton', () => {
+  //     if (screen.name === "home" || screen.name === "welcome") {
+  //       CapacitorApp.exitApp();
+  //     } else {
+  //       window.history.back(); // اترك المتصفح يتصرف في باقي الحالات
+  //     }
+  //   });
+  //   return () => { CapacitorApp.removeAllListeners(); };
+  // }, [screen.name]);
 
   // مراقبة حالة تسجيل الدخول وتصفير التاريخ عند التغيير
   useEffect(() => {

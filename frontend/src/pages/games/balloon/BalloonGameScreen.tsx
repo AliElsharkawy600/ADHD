@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { X } from "lucide-react";
 import { ScreenProps } from "../../../types";
-import { Balloon } from "../../../components/games/balloon/Balloon";
+import { Balloon } from "../../../components/games/balloon/balloon";
 import { GameResultScreen } from "../../../components/games/common/GameResultScreen";
 import { CloudShape, Hills, StarIcon } from "../../../components/games/common/GameAssets";
 import { BALLOON_GAME_LEVELS, BALLOON_POSITIONS } from "../../../config/gamesConfig";
