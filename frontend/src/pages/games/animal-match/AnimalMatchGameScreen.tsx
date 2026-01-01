@@ -102,7 +102,9 @@ export const AnimalMatchGameScreen: React.FC<ScreenProps> = ({
 
   // زر الخروج للعودة إلى الشاشة الرئيسية
   const handleClose = useCallback(() => {
-    onNavigate("home");
+    // onNavigate("home");
+    // onNavigate("", {}, { isBack: true })
+    window.history.back()
   }, [onNavigate]);
 
   const completedCount = completedLanes.length;

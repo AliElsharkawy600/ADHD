@@ -52,10 +52,10 @@ export const DragDropGameScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
   const handleDragStart = (e: React.TouchEvent | React.MouseEvent) => {
     if (gameStatus === 'success') return;
     
-    // Prevent default to stop scrolling, but check if cancelable first
-    if (e.cancelable && e.type === 'touchmove') {
-       e.preventDefault(); 
-    }
+    // // Prevent default to stop scrolling, but check if cancelable first
+    // if (e.cancelable && e.type === 'touchmove') {
+    //    e.preventDefault(); 
+    // }
 
     setIsDragging(true);
     updatePosition(e);
@@ -77,14 +77,20 @@ export const DragDropGameScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
     // Check collision with the Pole area
     if (columnRef.current) {
         const rect = columnRef.current.getBoundingClientRect();
-        // A wider hit area around the pole to make it easy for kids
-        const hitMargin = 80; 
-        if (
-            clientX >= rect.left - hitMargin &&
-            clientX <= rect.right + hitMargin &&
-            clientY >= rect.top - 150 &&
-            clientY <= rect.bottom
-        ) {
+        // 1. العرض: جعلناه 20 بكسل فقط لضمان أن الإصبع فوق العمود تماماً
+        const horizontalTolerance = 20; 
+        // 2. الارتفاع: جعلنا الاستجابة تبدأ من فوق قمة العمود بـ 40 بكسل وتنتهي عند القمة بـ 20 بكسل
+        // هذا يضمن أن الإفلات يتم "فوق" الرأس مباشرة
+        const verticalToleranceUpper = 40; 
+        const verticalToleranceLower = 20;
+
+        const isInsideHorizontal = clientX >= rect.left + (rect.width/2) - horizontalTolerance 
+                                 && clientX <= rect.left + (rect.width/2) + horizontalTolerance;
+
+        const isInsideVertical = clientY >= rect.top - verticalToleranceUpper 
+                               && clientY <= rect.top + verticalToleranceLower;
+
+        if (isInsideHorizontal && isInsideVertical) {
             setIsOverColumn(true);
         } else {
             setIsOverColumn(false);
@@ -128,7 +134,9 @@ export const DragDropGameScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
         currentLevel={1}
         onNext={resetGame}
         onRetry={resetGame}
-        onHome={() => onNavigate('home')}
+        // onHome={() => onNavigate('home')}
+        // onHome={() => onNavigate("", {}, { isBack: true })}
+        onHome={() => window.history.back()}
       />
     );
   }
@@ -148,6 +156,7 @@ export const DragDropGameScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
   };
 
   const renderPoleState = (stage: number) => {
+      // تأثير بصري بسيط عند الاقبال من الرأس (تكبير العمود قليلاً)
       const commonClass = `w-full h-full drop-shadow-2xl transition-all duration-300 ${isOverColumn ? 'scale-105 brightness-110' : ''}`;
       
       switch(stage) {
@@ -175,14 +184,16 @@ export const DragDropGameScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
         <div className="absolute top-10 left-10 w-40 text-white/80 animate-pulse">
             <CloudShape />
         </div>
-        <div className="absolute top-32 right-[-20px] w-32 text-white/60 animate-pulse delay-700">
+        <div className="absolute top-32 -right-5 w-32 text-white/60 animate-pulse delay-700">
             <CloudShape />
         </div>
         
         {/* Header HUD */}
         <div className="relative z-20 pt-safe px-4 mt-4 flex justify-between items-center">
             <button 
-                onClick={() => onNavigate('visual-games')}
+                // onClick={() => onNavigate('visual-games')}
+                // onClick={() => onNavigate("", {}, { isBack: true })}
+                onClick={() => window.history.back()}
                 className="w-10 h-10 bg-white/50 rounded-full flex items-center justify-center text-blue-900 hover:bg-white transition-colors"
             >
                 <X size={24} strokeWidth={3} />
@@ -212,9 +223,9 @@ export const DragDropGameScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
                     >
                          {renderDraggableRing(activeRingId)}
                     </div>
-                    <div className="text-center mt-2 text-blue-400/80 font-bold text-sm animate-bounce">
+                    {/* <div className="text-center mt-2 text-blue-400/80 font-bold text-sm animate-bounce">
                         اسحبني!
-                    </div>
+                    </div> */}
                 </div>
             )}
         </div>
@@ -223,12 +234,12 @@ export const DragDropGameScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
         <div className="flex-1 flex items-end justify-center z-10 w-full px-4 pb-12">
             <div 
                 ref={columnRef}
-                className="relative w-full max-w-sm h-[350px] flex items-end justify-center"
+                className="relative w-full max-w-sm h-87.5 flex items-end justify-center"
             >
                 {/* Visual Hint for Drop Zone */}
-                {isDragging && (
+                {/* {isDragging && (
                     <div className="absolute inset-0 bg-green-400/10 rounded-3xl border-4 border-green-400/30 border-dashed animate-pulse z-0" />
-                )}
+                )} */}
 
                 {/* The main SVG component representing current state */}
                 <div className="w-full h-full relative z-10">
