@@ -17,6 +17,7 @@ import { PremiumPlansScreen } from "../pages/auth/PremiumPlansScreen";
 import { useAuth } from "../context/AuthContext";
 import { BalloonGameScreen } from "../pages/games/balloon/BalloonGameScreen";
 import { AnimalMatchGameScreen } from "../pages/games/animal-match/AnimalMatchGameScreen";
+import { DragDropGameScreen } from "../pages/games/dragdrop/DragDropGameScreen";
 
 
 interface ScreenState {
@@ -193,6 +194,8 @@ export const AuthNavigator: React.FC = () => {
         return <BalloonGameScreen onNavigate={navigate} />;
       case "matching":
         return <AnimalMatchGameScreen onNavigate={navigate} />;
+      case "drag-drop":
+        return <DragDropGameScreen onNavigate={navigate} />;
       default:
         return <WelcomeScreen onNavigate={navigate} />;
     }
