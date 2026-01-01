@@ -42,9 +42,10 @@ const GAMES = [
     id: 4,
     title: "السحب والإفلات",
     desc: "الربط بين الأشياء",
-    isPremium: true,
+    isPremium: false,
     color: "bg-blue-50",
     icon: <DragDropGameIcon />,
+    path: "drag-drop",
   },
 ];
 
