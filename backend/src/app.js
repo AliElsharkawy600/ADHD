@@ -35,6 +35,9 @@ app.use("/api/auth", require("./routes/auth.routes"));
 app.use("/api/games", require("./routes/game.routes"));
 app.use("/api/attempts", require("./routes/attempt.routes"));
 app.use("/api/dashboard", require("./routes/dashboard.routes"));
+app.use("/api/levels", require("./routes/level.routes"));
+
+
 
 seed();
 seedDoctor();
