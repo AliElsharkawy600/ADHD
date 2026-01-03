@@ -4,10 +4,11 @@ import {
   EyesIllustration,
   BoyHeadIllustration,
   GirlAvatar,
-  BoylAvatar
+  BoylAvatar,
 } from "../../components/illustrations/DashboardIcons";
 import { ScreenProps } from "../../types";
 import { useAuth } from "../../context/AuthContext";
+import apiClient from "../../services/api"; // استيراد axios client
 
 // --- مكون الكارد (TherapyCard) ---
 const TherapyCard: React.FC<{
@@ -15,10 +16,10 @@ const TherapyCard: React.FC<{
   subtitle: string;
   bgColor: string;
   illustration: React.ReactNode;
-  onClick?: () => void; // التأكد من وجود خاصية الضغط
+  onClick?: () => void;
 }> = ({ title, subtitle, bgColor, illustration, onClick }) => (
   <div
-    onClick={onClick} // ربط الضغطة بالـ div الرئيسي
+    onClick={onClick}
     className={`${bgColor} rounded-3xl p-4 mb-4 relative overflow-hidden shadow-sm cursor-pointer active:scale-95 transition-transform`}
   >
     <div className="flex flex-col items-center justify-center pt-2 pb-4">
@@ -75,20 +76,36 @@ const ChartBar: React.FC<{
 );
 
 export const HomeScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
-  const { user } = useAuth(); // استدعاء بيانات المستخدم
+  const { user } = useAuth();
 
-  // دالة الحماية للتأكد من أن onNavigate موجودة قبل استدعائها
-  const handleNavigation = (screenName: string) => {
+  // دالة التعامل مع الضغط على العلاج البصري
+  const handleVisualTherapyClick = async () => {
+    try {
+      // طلب البيانات من الـ API
+      const response = await apiClient.get(
+        "/levels/by-criteria/attention/visual/1"
+      );
+
+      if (response.data && response.data.levelId) {
+        // الانتقال مع تمرير levelId في الـ params
+        handleNavigation("visual-games", { levelId: response.data.levelId });
+      }
+    } catch (error) {
+      console.error("Error fetching level details:", error);
+      // في حالة الخطأ يمكن الانتقال بشكل افتراضي أو إظهار رسالة
+      handleNavigation("visual-games");
+    }
+  };
+
+  const handleNavigation = (screenName: string, params?: any) => {
     if (typeof onNavigate === "function") {
-      onNavigate(screenName);
+      onNavigate(screenName, params);
     } else {
       console.error("Error: onNavigate is not passed correctly to HomeScreen");
     }
   };
 
-  // تحديد اسم الطفل (أو الاسم الافتراضي إذا لم يوجد)
-  // نقوم بفصل الاسم الأول فقط إذا كان الاسم ثلاثي/رباعي
-  const displayName = user?.name ? user.name.split(' ')[0] : 'يا بطل';
+  const displayName = user?.name ? user.name.split(" ")[0] : "يا بطل";
 
   return (
     <div className="flex flex-col h-full bg-gray-50">
@@ -99,12 +116,13 @@ export const HomeScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
         </button>
         <div className="flex items-center gap-3">
           <div className="text-right">
-            <p className="text-gray-400 text-xs">أهلاً {user?.gender === 'female' ? 'بالبطلة' : 'بالبطل'}</p>
+            <p className="text-gray-400 text-xs">
+              أهلاً {user?.gender === "female" ? "بالبطلة" : "بالبطل"}
+            </p>
             <p className="font-bold text-gray-800 text-lg">{displayName}</p>
           </div>
           <div>
-            {/* Display Avatar based on gender */}
-               {user?.gender === 'female' ? (<GirlAvatar />) : (<BoylAvatar />)}
+            {user?.gender === "female" ? <GirlAvatar /> : <BoylAvatar />}
           </div>
         </div>
       </div>
@@ -116,7 +134,7 @@ export const HomeScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
             subtitle="5 جلسات ممتعة لتنمية المهارات البصرية"
             bgColor="bg-[#E3F1FA]"
             illustration={<EyesIllustration />}
-            onClick={() => handleNavigation("visual-games")}
+            onClick={handleVisualTherapyClick} // استدعاء الدالة الجديدة
           />
 
           <TherapyCard
