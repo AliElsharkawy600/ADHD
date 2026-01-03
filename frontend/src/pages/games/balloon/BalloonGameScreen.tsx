@@ -120,7 +120,9 @@ export const BalloonGameScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
         onNext={handleNextLevel}
         onRetry={handleRetry}
         currentLevel={level}
-        onHome={() => onNavigate('home')}
+        // onHome={() => onNavigate('home')}
+        // onHome={() => onNavigate("", {}, { isBack: true })}
+        onHome={() => window.history.back()}
       />
     );
   }
@@ -132,7 +134,7 @@ export const BalloonGameScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
         <div className="absolute top-10 left-10 w-40 text-white/60 animate-pulse">
             <CloudShape />
         </div>
-        <div className="absolute top-20 right-[-20px] w-32 text-white/40 animate-pulse delay-700">
+        <div className="absolute top-20 -right-5 w-32 text-white/40 animate-pulse delay-700">
             <CloudShape />
         </div>
         <div className="absolute top-40 left-1/2 w-24 text-white/30">
@@ -149,7 +151,9 @@ export const BalloonGameScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
             
             {/* Close Button */}
             <button 
-                onClick={() => onNavigate('home')}
+                // onClick={() => onNavigate('home')}
+                // onClick={() => onNavigate("", {}, { isBack: true })}
+                onClick={() => window.history.back()}
                 className="w-10 h-10 bg-[#A5D0FA] rounded-full flex items-center justify-center text-white hover:bg-blue-400 transition-colors"
             >
                 <X size={24} strokeWidth={3} />

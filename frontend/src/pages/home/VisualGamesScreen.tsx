@@ -51,9 +51,10 @@ const GAMES = [
     id: 5,
     title: "السحب والإفلات",
     desc: "الربط بين الأشياء",
-    isPremium: true,
+    isPremium: false,
     color: "bg-blue-50",
     icon: <DragDropGameIcon />,
+    path: "drag-drop",
   },
 ];
 
@@ -95,11 +96,11 @@ export const VisualGamesScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
             }}
             className={`relative flex items-center p-6 rounded-2xl border-2 ${
               game.isPremium ? "bg-gray-100 border-gray-300" : "border-blue-200"
-            } cursor-pointer hover:shadow-md transition-shadow active:scale-[0.98] transition-transform`}
+            } cursor-pointer hover:shadow-md active:scale-[0.98] transition-all`}
           >
             {/* Icon Container */}
             <div
-              className={`w-20 h-20 rounded-xl ${game.color} flex items-center justify-center relative flex-shrink-0`}
+              className={`w-20 h-20 rounded-xl ${game.color} flex items-center justify-center relative shrink-0`}
             >
               {game.icon}
               {game.isPremium && (
@@ -116,7 +117,7 @@ export const VisualGamesScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
             </div>
 
             {/* Play Button */}
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
                 <PlayButtonIcon />
             </div>
           </div>

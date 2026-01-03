@@ -44,7 +44,7 @@ export const GameResultScreen: React.FC<ResultScreenProps> = ({
       </div>
 
       {/* Content */}
-      <div className="flex-1 flex flex-col items-center justify-center w-full max-w-sm px-6 -mt-10 z-10">
+      <div className="flex-1 flex flex-col items-center justify-center w-full max-w-sm px-6 z-10">
         
         {/* Title */}
         <h1 className="text-4xl font-black text-[#2561C0] mb-8 font-baloo">
