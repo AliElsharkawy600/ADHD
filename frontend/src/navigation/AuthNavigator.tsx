@@ -18,7 +18,7 @@ import { useAuth } from "../context/AuthContext";
 import { BalloonGameScreen } from "../pages/games/balloon/BalloonGameScreen";
 import { AnimalMatchGameScreen } from "../pages/games/animal-match/AnimalMatchGameScreen";
 import { DragDropGameScreen } from "../pages/games/dragdrop/DragDropGameScreen";
-
+import MatchingGameScreen from "../pages/games/matching-game/MatchingGameScreen";
 
 interface ScreenState {
   name: string;
@@ -93,13 +93,13 @@ export const AuthNavigator: React.FC = () => {
   //   };
   // }, []);
 
-
   // 3. ربط زر الرجوع الفعلي في أجهزة الأندرويد (Capacitor)
   useEffect(() => {
     const setupBackButton = async () => {
-      await CapacitorApp.addListener('backButton', () => {
+      await CapacitorApp.addListener("backButton", () => {
         // نحدد هنا الشاشات التي نعتبرها "جذور" للتطبيق ويجب الخروج عندها
-        const isRootScreen = screen.name === "home" || screen.name === "welcome";
+        const isRootScreen =
+          screen.name === "home" || screen.name === "welcome";
 
         if (isRootScreen) {
           // إذا كان في المنزل أو الترحيب، أغلق التطبيق مباشرة
@@ -194,8 +194,11 @@ export const AuthNavigator: React.FC = () => {
         return <BalloonGameScreen onNavigate={navigate} />;
       case "matching":
         return <AnimalMatchGameScreen onNavigate={navigate} />;
+      case "matching-game":
+        return <MatchingGameScreen />;
       case "drag-drop":
         return <DragDropGameScreen onNavigate={navigate} />;
+
       default:
         return <WelcomeScreen onNavigate={navigate} />;
     }

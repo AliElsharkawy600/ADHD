@@ -1,14 +1,13 @@
-
 import React, { useState } from "react";
 import { ScreenProps } from "../../types";
 import { PremiumPopup } from "../../components/ui/PremiumPopup";
 import dogPhoto from "../../assets/dog.png";
-import { 
-    BalloonGameIcon, 
-    TrackingGameIcon, 
-    DragDropGameIcon, 
-    PlayButtonIcon,
-    LockIcon
+import {
+  BalloonGameIcon,
+  TrackingGameIcon,
+  DragDropGameIcon,
+  PlayButtonIcon,
+  LockIcon,
 } from "../../components/icons/GameIcons";
 
 const GAMES = [
@@ -34,9 +33,10 @@ const GAMES = [
     id: 3,
     title: "تتبع الإشارة",
     desc: "التتبع البصري",
-    isPremium: true,
+    isPremium: false,
     color: "bg-gray-100",
     icon: <TrackingGameIcon />,
+    path: "matching-game",
   },
   {
     id: 4,
@@ -61,8 +61,7 @@ export const VisualGamesScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
             // onClick={() => onNavigate("home")}
             // onClick={() => onNavigate("", {}, { isBack: true })}
             onClick={() => window.history.back()}
-            className="p-2 text-black-500 text-4xl hover:bg-gray-100 rounded-full transition-colors"
-          >
+            className="p-2 text-black-500 text-4xl hover:bg-gray-100 rounded-full transition-colors">
             {"<"}
           </button>
         </div>
@@ -87,12 +86,10 @@ export const VisualGamesScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
             }}
             className={`relative flex items-center p-6 rounded-2xl border-2 ${
               game.isPremium ? "bg-gray-100 border-gray-300" : "border-blue-200"
-            } cursor-pointer hover:shadow-md active:scale-[0.98] transition-all`}
-          >
+            } cursor-pointer hover:shadow-md active:scale-[0.98] transition-all`}>
             {/* Icon Container */}
             <div
-              className={`w-20 h-20 rounded-xl ${game.color} flex items-center justify-center relative shrink-0`}
-            >
+              className={`w-20 h-20 rounded-xl ${game.color} flex items-center justify-center relative shrink-0`}>
               {game.icon}
               {game.isPremium && (
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-full p-1.5 shadow">
@@ -109,7 +106,7 @@ export const VisualGamesScreen: React.FC<ScreenProps> = ({ onNavigate }) => {
 
             {/* Play Button */}
             <div className="shrink-0">
-                <PlayButtonIcon />
+              <PlayButtonIcon />
             </div>
           </div>
         ))}
