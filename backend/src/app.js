@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const seed = require("./utils/seed");
 const seedDoctor = require("./utils/seedDoctor");
-const scoreRoutes = require("./routes/score.routes");
+// const scoreRoutes = require("./routes/score.routes");
 dotenv.config();
 connectDB();
 
@@ -36,8 +36,7 @@ app.use("/api/games", require("./routes/game.routes"));
 app.use("/api/attempts", require("./routes/attempt.routes"));
 app.use("/api/dashboard", require("./routes/dashboard.routes"));
 app.use("/api/levels", require("./routes/level.routes"));
-
-
+app.use("/api/progress", require("./routes/progress.routes"));
 
 seed();
 seedDoctor();
