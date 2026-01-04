@@ -36,74 +36,77 @@ export const ChildSetupScreen: React.FC<ScreenProps> = ({
     return age;
   };
 
-  const handleSubmit = async () => {
-    setError("");
+const handleSubmit = async () => {
+  setError("");
 
-    if (
-      !name ||
-      !birthDate ||
-      !parentPhoneNumber ||
-      !city ||
-      !country ||
-      !gender
-    ) {
-      setError("الرجاء ملء جميع الحقول");
-      return;
+  if (
+    !name ||
+    !birthDate ||
+    !parentPhoneNumber ||
+    !city ||
+    !country ||
+    !gender
+  ) {
+    setError("الرجاء ملء جميع الحقول");
+    return;
+  }
+
+  // Name Validation
+  const nameParts = name.trim().split(/\s+/);
+  if (nameParts.length < 4) {
+    setError("الرجاء إدخال اسم الطفل رباعي");
+    return;
+  }
+
+  // Phone Validation
+  const parentPhoneNumberRegex = /^(010|011|012|015)[0-9]{8}$/;
+  if (!parentPhoneNumberRegex.test(parentPhoneNumber.trim())) {
+    setError("رقم الهاتف غير صحيح");
+    return;
+  }
+
+  // Age Validation
+  const age = calculateAge(birthDate);
+  if (age < 3 || age > 9) {
+    setError("يجب أن يتراوح عمر الطفل من 3 إلى 9 سنوات");
+    return;
+  }
+
+  if (!tempToken) {
+    setError("خطأ في المصادقة");
+    setTimeout(() => onNavigate("login"), 2000);
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    // التعديل هنا فقط لاستلام الريسبونس وتخزينه
+    const response = await setupChildProfile(
+      {
+        name,
+        birthDate,
+        gender: gender as "male" | "female",
+        country,
+        city,
+        parentPhoneNumber,
+      },
+      tempToken
+    );
+     console.log("Child profile setup response:", response);
+     
+    // تخزين الـ childId في الـ localStorage
+    if (response && response.childId) {
+      localStorage.setItem("childId", response.childId);
     }
 
-    // Name Validation
-    const nameParts = name.trim().split(/\s+/);
-    if (nameParts.length < 4) {
-      setError("الرجاء إدخال اسم الطفل رباعي");
-      return;
-    }
-
-    // Phone Validation
-    const parentPhoneNumberRegex = /^(010|011|012|015)[0-9]{8}$/;
-    if (!parentPhoneNumberRegex.test(parentPhoneNumber.trim())) {
-      setError("رقم الهاتف غير صحيح");
-      return;
-    }
-
-    // Age Validation
-    const age = calculateAge(birthDate);
-    if (age < 3 || age > 9) {
-      setError("يجب أن يتراوح عمر الطفل من 3 إلى 9 سنوات");
-      return;
-    }
-
-    if (!tempToken) {
-      setError("خطأ في المصادقة");
-      setTimeout(() => onNavigate("login"), 2000);
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      // Gender is guaranteed to be "male" or "female" here due to the check above
-      await setupChildProfile(
-        {
-          name,
-          birthDate,
-          gender: gender as "male" | "female",
-          country,
-          city,
-          parentPhoneNumber,
-        },
-        tempToken
-      );
-
-      // Now we have the user data locally (name, gender) and the token.
-      // Although setupChildProfile might not return the full user object structured like the login response,
-      // we know the data we just sent.
-      login(tempToken, { name: name, gender: gender as "male" | "female" });
-    } catch (err: any) {
-      setError(err.message || "حدث خطأ أثناء حفظ البيانات");
-    } finally {
-      setLoading(false);
-    }
-  };
+    login(tempToken, { name: name, gender: gender as "male" | "female" });
+  } catch (err: any) {
+    setError(err.message || "حدث خطأ أثناء حفظ البيانات");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="flex flex-col h-full px-6 pt-12 pb-safe bg-white overflow-y-auto no-scrollbar">

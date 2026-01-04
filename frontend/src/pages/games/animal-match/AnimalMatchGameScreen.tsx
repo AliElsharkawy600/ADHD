@@ -245,7 +245,7 @@ export const AnimalMatchGameScreen: React.FC<ScreenProps> = ({
 
               <button
                 onClick={handleProceed}
-                className="flex-1 px-8 h-14 bg-[#5CAAF8] text-white rounded-full flex items-center justify-center gap-2 shadow-lg shadow-blue-200 hover:bg-[#4a90e2] transition-colors"
+                className="flex-1 mt-20 px-8 h-14 bg-[#5CAAF8] text-white rounded-full flex items-center justify-center gap-2 shadow-lg shadow-blue-200 hover:bg-[#4a90e2] transition-colors"
               >
                 <span className="text-xl font-bold">التالى</span>
                 <Play size={20} fill="currentColor" />

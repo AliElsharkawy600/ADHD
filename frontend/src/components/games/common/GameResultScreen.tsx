@@ -47,7 +47,7 @@ export const GameResultScreen: React.FC<ResultScreenProps> = ({
       <div className="flex-1 flex flex-col items-center justify-center w-full max-w-sm px-6 z-10">
         
         {/* Title */}
-        <h1 className="text-4xl font-black text-[#2561C0] mb-8 font-baloo">
+        <h1 className="text-4xl font-black mb-14 text-[#2561C0]  font-baloo">
             {isSuccess ? "أحسنت!" : "حاول تاني"}
         </h1>
 
@@ -81,7 +81,7 @@ export const GameResultScreen: React.FC<ResultScreenProps> = ({
             ) : (
                 <button 
                 onClick={onRetry}
-                className="flex-1 h-14 bg-[#5CAAF8] text-white rounded-full flex items-center justify-center gap-3 shadow-lg shadow-blue-200 hover:bg-[#4a90e2] transition-colors"
+                className="mt-14 flex-1 h-14 bg-[#5CAAF8] text-white rounded-full flex items-center justify-center gap-3 shadow-lg shadow-blue-200 hover:bg-[#4a90e2] transition-colors"
               >
                 <RotateCw size={20} />
                 <span className="text-xl font-bold pb-1">حاول تاني</span>
