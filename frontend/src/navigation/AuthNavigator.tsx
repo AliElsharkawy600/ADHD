@@ -18,6 +18,7 @@ import { useAuth } from "../context/AuthContext";
 import { BalloonGameScreen } from "../pages/games/balloon/BalloonGameScreen";
 import { AnimalMatchGameScreen } from "../pages/games/animal-match/AnimalMatchGameScreen";
 import { DragDropGameScreen } from "../pages/games/dragdrop/DragDropGameScreen";
+import MatchingGameScreen from "../pages/games/matching-game/MatchingGameScreen";
 
 interface ScreenState {
   name: string;
@@ -61,9 +62,35 @@ export const AuthNavigator: React.FC = () => {
     return () => window.removeEventListener("popstate", handlePopState);
   }, [isAuthenticated]);
 
+
+
+  // // 3. ربط زر الرجوع الفعلي في أجهزة الأندرويد (Capacitor)
+  // useEffect(() => {
+  //   const setupBackButton = async () => {
+  //     await CapacitorApp.addListener('backButton', () => {
+  //       // إذا كان هناك تاريخ للرجوع، ارجع للخلف (هذا سيحفز popstate تلقائياً)
+  //       if (window.history.length > 1) {
+  //         window.history.back();
+  //       } else {
+  //         // إذا كنت في أول شاشة، أغلق التطبيق
+  //         CapacitorApp.exitApp();
+  //       }
+  //     });
+  //   };
+
+  //   setupBackButton();
+
+  //   return () => {
+  //     CapacitorApp.removeAllListeners();
+  //   };
+  // }, []);
+
+  // 3. ربط زر الرجوع الفعلي في أجهزة الأندرويد (Capacitor)
+
   useEffect(() => {
     const setupBackButton = async () => {
       await CapacitorApp.addListener("backButton", () => {
+        // نحدد هنا الشاشات التي نعتبرها "جذور" للتطبيق ويجب الخروج عندها
         const isRootScreen =
           screen.name === "home" || screen.name === "welcome";
         if (isRootScreen) {
@@ -145,6 +172,8 @@ export const AuthNavigator: React.FC = () => {
         return (
           <DragDropGameScreen onNavigate={navigate} params={screen.params} />
         );
+       case "matching-game":
+        return <MatchingGameScreen />;
 
       case "parent-gate":
         return (
