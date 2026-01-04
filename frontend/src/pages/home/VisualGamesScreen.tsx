@@ -35,7 +35,7 @@ const GAMES = [
     id: 3,
     title: "تتبع الإشارة",
     desc: "التتبع البصري",
-    isPremium: false,
+    isPremium: true,
     color: "bg-gray-100",
     icon: <TrackingGameIcon />,
     path: "matching-game",
@@ -126,7 +126,8 @@ export const VisualGamesScreen: React.FC<ScreenProps> = ({
         <div className="flex justify-start">
           <button
             onClick={() => window.history.back()}
-            className="p-2 text-black-500 text-4xl hover:bg-gray-100 rounded-full transition-colors">
+            className="p-2 text-black-500 text-4xl hover:bg-gray-100 rounded-full transition-colors"
+          >
             {"<"}
           </button>
         </div>
@@ -152,7 +153,8 @@ export const VisualGamesScreen: React.FC<ScreenProps> = ({
           >
             {/* Icon Container */}
             <div
-              className={`w-20 h-20 rounded-xl ${game.color} flex items-center justify-center relative shrink-0`}>
+              className={`w-20 h-20 rounded-xl ${game.color} flex items-center justify-center relative shrink-0`}
+            >
               {game.icon}
               {game.isPremium && (
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-full p-1.5 shadow">
