@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { App as CapacitorApp } from "@capacitor/app"; // استيراد كباستور للتحكم في زر الموبايل
+import { App as CapacitorApp } from "@capacitor/app";
 import { WelcomeScreen } from "../pages/auth/WelcomeScreen";
 import { LoginScreen } from "../pages/auth/LoginScreen";
 import { SignupScreen } from "../pages/auth/SignupScreen";
@@ -27,13 +27,10 @@ interface ScreenState {
 
 export const AuthNavigator: React.FC = () => {
   const { isAuthenticated } = useAuth();
-
-  // الحالة الابتدائية للشاشة
   const [screen, setScreen] = useState<ScreenState>({
     name: isAuthenticated ? "home" : "welcome",
   });
 
-  // 1. معالجة التنقل (Navigation) وتسجيله في الـ History
   const navigate = (
     to: string,
     params?: any,
@@ -45,32 +42,27 @@ export const AuthNavigator: React.FC = () => {
     }
 
     const nextScreen = { name: to, params };
-    // تسجيل الشاشة الجديدة في تاريخ المتصفح (Web History)
     window.history.pushState(nextScreen, "");
     setScreen(nextScreen);
   };
 
-  // 2. الاستماع لحدث الرجوع (popstate) سواء من المتصفح أو زر الرجوع
   useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {
       if (event.state) {
-        // إذا رجع المستخدم، نأخذ البيانات المخزنة مسبقاً ونعرضها
         setScreen(event.state);
       }
     };
-
     window.addEventListener("popstate", handlePopState);
-
-    // تسجيل الحالة الأولى في التاريخ عند تشغيل التطبيق لأول مرة
     if (!window.history.state) {
       window.history.replaceState(
         { name: isAuthenticated ? "home" : "welcome" },
         ""
       );
     }
-
     return () => window.removeEventListener("popstate", handlePopState);
-  }, []);
+  }, [isAuthenticated]);
+
+
 
   // // 3. ربط زر الرجوع الفعلي في أجهزة الأندرويد (Capacitor)
   // useEffect(() => {
@@ -94,48 +86,29 @@ export const AuthNavigator: React.FC = () => {
   // }, []);
 
   // 3. ربط زر الرجوع الفعلي في أجهزة الأندرويد (Capacitor)
+
   useEffect(() => {
     const setupBackButton = async () => {
       await CapacitorApp.addListener("backButton", () => {
         // نحدد هنا الشاشات التي نعتبرها "جذور" للتطبيق ويجب الخروج عندها
         const isRootScreen =
           screen.name === "home" || screen.name === "welcome";
-
         if (isRootScreen) {
-          // إذا كان في المنزل أو الترحيب، أغلق التطبيق مباشرة
           CapacitorApp.exitApp();
         } else {
-          // في أي شاشة أخرى، ارجع للخلف في التاريخ
           window.history.back();
         }
       });
     };
-
     setupBackButton();
-
     return () => {
-      // تنظيف المستمع عند مسح الكومبوننت
       CapacitorApp.removeAllListeners();
     };
-  }, [screen.name]); // ضروري إضافة screen.name هنا ليتحدث المستمع بأحدث شاشة
+  }, [screen.name]);
 
-  // // // 3. ربط زر الرجوع الفعلي في أجهزة الأندرويد (Capacitor)
-  // useEffect(() => {
-  //   CapacitorApp.addListener('backButton', () => {
-  //     if (screen.name === "home" || screen.name === "welcome") {
-  //       CapacitorApp.exitApp();
-  //     } else {
-  //       window.history.back(); // اترك المتصفح يتصرف في باقي الحالات
-  //     }
-  //   });
-  //   return () => { CapacitorApp.removeAllListeners(); };
-  // }, [screen.name]);
-
-  // مراقبة حالة تسجيل الدخول وتصفير التاريخ عند التغيير
   useEffect(() => {
     const initialScreen = { name: isAuthenticated ? "home" : "welcome" };
     setScreen(initialScreen);
-    // عند تسجيل الدخول أو الخروج، نريد تصفير التاريخ القديم
     window.history.replaceState(initialScreen, "");
   }, [isAuthenticated]);
 
@@ -166,7 +139,7 @@ export const AuthNavigator: React.FC = () => {
           <SuccessScreen
             onNavigate={navigate}
             title="مرحباً!"
-            subtitle="تم إنشاء حسابك وتفعيله بنجاح"
+            subtitle="تم إنشاء حسابك بنجاح"
           />
         );
       case "success-reset":
@@ -177,10 +150,31 @@ export const AuthNavigator: React.FC = () => {
             subtitle="تم تغيير كلمة المرور بنجاح"
           />
         );
+
+      // الشاشات الرئيسية مع تمرير الـ Params
       case "home":
         return <HomeScreen onNavigate={navigate} />;
       case "visual-games":
-        return <VisualGamesScreen onNavigate={navigate} />;
+        return (
+          <VisualGamesScreen onNavigate={navigate} params={screen.params} />
+        );
+
+      // شاشات الألعاب (تم إضافة params هنا)
+      case "balloon":
+        return (
+          <BalloonGameScreen onNavigate={navigate} params={screen.params} />
+        );
+      case "matching":
+        return (
+          <AnimalMatchGameScreen onNavigate={navigate} params={screen.params} />
+        );
+      case "drag-drop":
+        return (
+          <DragDropGameScreen onNavigate={navigate} params={screen.params} />
+        );
+       case "matching-game":
+        return <MatchingGameScreen />;
+
       case "parent-gate":
         return (
           <ParentGateScreen
@@ -190,15 +184,6 @@ export const AuthNavigator: React.FC = () => {
         );
       case "premium-plans":
         return <PremiumPlansScreen onNavigate={navigate} />;
-      case "balloon":
-        return <BalloonGameScreen onNavigate={navigate} />;
-      case "matching":
-        return <AnimalMatchGameScreen onNavigate={navigate} />;
-      case "matching-game":
-        return <MatchingGameScreen />;
-      case "drag-drop":
-        return <DragDropGameScreen onNavigate={navigate} />;
-
       default:
         return <WelcomeScreen onNavigate={navigate} />;
     }
